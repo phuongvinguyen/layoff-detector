@@ -4,7 +4,13 @@
 # All constant variables (that do not change at runtime) should be stored here, and all files should import from here.
 #
 # How to define variables:
-# Example: URL = "https://www.example.com"
+# Example: Filename = {LINK:"https://www.example.com",...}
 # Attention: Capslock the variable since they are constants, and add a comment to explain what the variable is for.
 # How to import variables:
 # from config import 
+
+# pdf_to_cvs_converter.ipynb:
+PDF_TO_CSV = {
+    "PDF_INPUT_PATH": "src/Layoffs.pdf",
+    "CSV_OUTPUT_PATH": "src/layoffs.csv",
+}
