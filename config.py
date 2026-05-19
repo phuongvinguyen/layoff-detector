@@ -12,5 +12,5 @@
 # pdf_to_cvs_converter.ipynb:
 PDF_TO_CSV = {
     "PDF_INPUT_PATH": "src/Layoffs.pdf",
-    "CSV_OUTPUT_PATH": "src/layoffs.csv",
+    "CSV_OUTPUT_PATH": "src/fyi_layoffs.csv",
 }
