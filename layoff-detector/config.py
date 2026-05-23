@@ -1,3 +1,5 @@
+# config.py
+
 # Central config for the layoff-detector:
 #
 # This file exists so you do not have to dig through each seperate file to change a setting.
@@ -10,7 +12,17 @@
 # from config import 
 
 # pdf_to_cvs_converter.ipynb:
+
+from pathlib import Path
+
+# Directories
+DATA_DIR       = Path("../data")
+DATA_RAW       = DATA_DIR / "raw"
+DATA_CLEANED   = DATA_DIR / "cleaned"
+DATA_PROCESSED = DATA_DIR / "processed"
+
+# Files 
 PDF_TO_CSV = {
-    "PDF_INPUT_PATH": "src/Layoffs.pdf",
-    "CSV_OUTPUT_PATH": "src/fyi_layoffs.csv",
+    "PDF_INPUT_PATH":  DATA_RAW / "Layoffs.pdf",
+    "CSV_OUTPUT_PATH": DATA_RAW / "fyi_layoffs.csv",
 }
