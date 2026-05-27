@@ -26,3 +26,8 @@ PDF_TO_CSV = {
     "PDF_INPUT_PATH":  DATA_RAW / "Layoffs.pdf",
     "CSV_OUTPUT_PATH": DATA_RAW / "fyi_layoffs.csv",
 }
+
+GET_FINANCIAL_DATA = {
+    "INPUT_CSV_PATH":  DATA_RAW / "fyi_layoffs.csv",
+    "OUTPUT_CSV_PATH": DATA_PROCESSED / "fyi_layoffs_with_financials.csv",
+}
