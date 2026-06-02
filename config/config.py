@@ -44,5 +44,5 @@ GET_FINANCIAL_DATA_COMBINED = {
 }
 
 MERGED_DATA = {
-    MERGED_OUTPUT_CSV_PATH: DATA_PROCESSED / "merged_bs_cs_fd.csv"
+    "MERGED_OUTPUT_CSV_PATH": DATA_PROCESSED / "merged_bs_cs_fd.csv"
 }
