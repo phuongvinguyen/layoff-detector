@@ -31,9 +31,9 @@ GET_FINANCIAL_DATA = {
     "INPUT_CSV_PATH":  DATA_RAW / "fyi_layoffs.csv",
     "FILTERED_CSV_PATH": DATA_PROCESSED / "filtered_layoffs.csv",
     "LAYOFFS_WITH_TICKERS_CSV_PATH": DATA_PROCESSED / "layoffs_with_tickers.csv",
-    "BALANCE_SHEET_DIR": DATA_PROCESSED / "balance_sheet",
-    "CASHFLOW_DIR": DATA_PROCESSED / "cashflows",
-    "FINANCIAL_DATA_DIR": DATA_PROCESSED / "financials",
+    "BALANCE_SHEET_DIR": DATA_DIR/ "balance_sheet",
+    "CASHFLOW_DIR": DATA_DIR / "cashflows",
+    "FINANCIAL_DATA_DIR": DATA_DIR / "financials",
 }
 
 GET_FINANCIAL_DATA_COMBINED = {
