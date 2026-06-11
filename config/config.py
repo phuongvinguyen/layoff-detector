@@ -28,7 +28,8 @@ PDF_TO_CSV = {
 }
 
 GET_FINANCIAL_DATA = {
-    "INPUT_CSV_PATH":  DATA_RAW / "fyi_layoffs.csv",
+    "INPUT_CSV_PATH":  BASE_DIR / "src" / "final_layoffs.csv",
+    "OLD_INPUT_CSV_PATH":  DATA_RAW / "fyi_layoffs.csv",
     "FILTERED_CSV_PATH": DATA_PROCESSED / "filtered_layoffs.csv",
     "LAYOFFS_WITH_TICKERS_CSV_PATH": DATA_PROCESSED / "layoffs_with_tickers.csv",
     "BALANCE_SHEET_DIR": DATA_PROCESSED / "balance_sheet",
