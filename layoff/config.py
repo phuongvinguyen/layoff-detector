@@ -15,11 +15,14 @@
 
 from pathlib import Path
 BASE_DIR = Path(__file__).parent.parent
+
 # Directories
 DATA_DIR       = BASE_DIR / "data"
 DATA_RAW       = DATA_DIR / "raw"
 DATA_CLEANED   = DATA_DIR / "cleaned"
 DATA_PROCESSED = DATA_DIR / "processed"
+
+SRC_DIR = BASE_DIR / "src"
 
 # Files 
 PDF_TO_CSV = {
@@ -27,9 +30,14 @@ PDF_TO_CSV = {
     "CSV_OUTPUT_PATH": DATA_RAW / "fyi_layoffs.csv",
 }
 
+GET_RAW = {
+    "WARNDatabase2026" : DATA_RAW / "WARNDatabase2026.csv",
+    "WARNDatabaseMasterExcluding2026" : DATA_RAW / "WARNDatabase2026.csv"
+}
+
 GET_FINANCIAL_DATA = {
     "INPUT_CSV_PATH":  "../src/cleaned_layoffs.csv",
-    "OLD_INPUT_CSV_PATH":  DATA_RAW / "fyi_layoffs.csv",
+    "fyi_layoffs":  DATA_RAW / "fyi_layoffs.csv",
     "FILTERED_CSV_PATH": DATA_PROCESSED / "filtered_layoffs.csv",
     "LAYOFFS_WITH_TICKERS_CSV_PATH": DATA_PROCESSED / "layoffs_with_tickers.csv",
     "BALANCE_SHEET_DIR": DATA_DIR / "balance_sheet",
@@ -51,3 +59,5 @@ MERGED_DATA = {
 PIPELINE = {
     "INPUT_CSV_PATH":  DATA_PROCESSED / "merged_bs_cs_fd.csv"
 }
+
+# Configuration variables

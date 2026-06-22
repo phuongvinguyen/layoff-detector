@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="layoff-detector",
+    name="layoff",
     version="0.1",
     packages=find_packages(),
     install_requires=[
@@ -12,4 +12,9 @@ setup(
         "numpy",
         "tabula-py",
     ],
+    packages=find_packages(
+        where=".",
+        include=["layoff*"],
+        exclude=["data*", "tests*", "scripts*", "notebooks*", "src*"]
+    ),
 )
