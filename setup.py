@@ -1,5 +1,3 @@
-# setup.py
-
 from setuptools import setup, find_packages
 
 setup(
@@ -12,9 +10,4 @@ setup(
         "numpy",
         "tabula-py",
     ],
-    packages=find_packages(
-        where=".",
-        include=["layoff*"],
-        exclude=["data*", "tests*", "scripts*", "notebooks*", "src*"]
-    ),
 )

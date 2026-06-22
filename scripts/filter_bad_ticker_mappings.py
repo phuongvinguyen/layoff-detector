@@ -2,16 +2,13 @@ from __future__ import annotations
 
 import re
 from collections import Counter
-from pathlib import Path
-
 import pandas as pd
 
+from layoff import config
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = PROJECT_ROOT / "data"
-INPUT_PATH = DATA_DIR / "processed" / "layoffs_with_tickers.csv"
-OUTPUT_PATH = DATA_DIR / "processed" / "layoffs_with_tickers_cleaned.csv"
-REPORT_PATH = DATA_DIR / "processed" / "ticker_conflict_report.csv"
+INPUT_PATH = config.DATA_PROCESSED / "layoffs_with_tickers.csv"
+OUTPUT_PATH = config.DATA_PROCESSED / "layoffs_with_tickers_cleaned.csv"
+REPORT_PATH = config.DATA_PROCESSED / "ticker_conflict_report.csv"
 
 FYI_SOURCE = "fyi_layoffs.csv"
 
