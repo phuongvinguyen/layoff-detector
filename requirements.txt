@@ -3,3 +3,4 @@ pandas
 numpy
 tabula-py
 setuptools
+jpype1
