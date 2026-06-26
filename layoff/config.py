@@ -66,6 +66,6 @@ PIPELINE = {
 
 LABELED = {
     "LABELED_OUTPUT_CSV_PATH": DATA_PROCESSED / "labeled_merged_data.csv",
-} 
+}
 
 # Configuration variables

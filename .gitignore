@@ -3,3 +3,6 @@ __pycache__
 venv
 layoff.egg-info
 /dist
+layoff/layoff.egg-info
+layoff/__pycache__
+dist
