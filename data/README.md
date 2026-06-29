@@ -1,0 +1,1 @@
+Layoffs: layoffs.fyi (source content)

@@ -29,7 +29,7 @@ SRC_DIR = BASE_DIR / "src"
 
 # Files 
 PDF_TO_CSV = {
-    "PDF_INPUT_PATH":  DATA_RAW / "Layoffs.pdf",
+    "PDF_INPUT_PATH":  DATA_RAW / "layoffs.pdf",
     "CSV_OUTPUT_PATH": DATA_RAW / "fyi_layoffs.csv",
 }
 
