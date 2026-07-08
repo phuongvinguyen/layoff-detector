@@ -4,8 +4,7 @@ flowchart TD
         P -->|feedback loop| B
 
         subgraph Order_Collection ["Data Collection Order"]
-             G["get_fin_data_combined.ipynb"] --> H["get_finance_data.ipynb"]
-            H --> I["pdf_to_csv.ipynb"]
+            H["get_finance_data.ipynb"] --> I["pdf_to_csv.ipynb"]
         end
 
         subgraph Order_Processing ["Processing Order"]
@@ -20,5 +19,5 @@ flowchart TD
         
         P -.-> J
         A -.-> N
-        B -.-> G
+        B -.-> H
     end

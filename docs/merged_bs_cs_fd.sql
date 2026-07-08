@@ -50,7 +50,7 @@ flowchart TD
         OUTPUT_FILE[("merged_bs_cs_fd.csv")]
     end
 
-    START --> FUNC
+
     START --> EXTRACT_TICKERS
     
     BALANCE_SHEET --> EXTRACT_TICKERS

@@ -49,12 +49,3 @@ flowchart TD
         COMBINE --> SAVE_LABELED
         SAVE_LABELED --> LABELED
     end
-
-    subgraph Inputs ["Input Files"]
-        direction LR
-        TICKERS[("layoffs_with_tickers.csv")]
-        FEATURES[("merged_bs_cs_fd.csv")]
-    end
-
-    TICKERS --> LOAD_TICKERS
-    FEATURES --> LOAD_FEATURES

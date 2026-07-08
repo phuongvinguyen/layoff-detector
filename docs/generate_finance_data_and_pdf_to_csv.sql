@@ -1,4 +1,3 @@
-
 graph TD
     subgraph PDF_Extraction ["PDF to CSV Pipeline"]
         PDF_INPUT[/"data/raw/layoffs.pdf"\]
