@@ -1,5 +1,5 @@
 flowchart TD
-    subgraph DataRoot["Data Pipeline (layoff detector)"]
+    subgraph DataRoot["OSINT and DATA Pipeline (layoff detector)"]
         Z[Direction] --> B[Collection] --> P[Processing] --> A[Analysis] --> E[Dissemination]
         P -->|feedback loop| B
 
