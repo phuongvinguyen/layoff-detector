@@ -62,7 +62,7 @@ graph TD
     end
 
     subgraph Data_Ingestion ["Data Ingestion"]
-        FILE_A[(File fyi_layoffs.csv.csv)]
+        FILE_A[(File fyi_layoffs.csv)]
         FILE_B[(File WARNDatabase2026.csv)]
         FILE_C[(File WARNDatabaseMasterExcluding2026_.csv)]
         
