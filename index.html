@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CASE FILE — [Project Name]</title>
+<title>CASE FILE — Layoff Detector</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,22 +16,42 @@
       <div class="pin-item active" data-target="problem">
         <span class="thread"></span>
         <a href="#problem"><span class="num">01</span>Problem</a>
+        <div class="sub-links">
+          <a href="#problem-question" data-sub="problem-question">The Question</a>
+          <a href="#problem-motivation" data-sub="problem-motivation">Motivation</a>
+        </div>
       </div>
       <div class="pin-item" data-target="data">
         <span class="thread"></span>
         <a href="#data"><span class="num">02</span>Data</a>
+        <div class="sub-links">
+          <a href="#data-collection" data-sub="data-collection">Collection</a>
+          <a href="#data-wrangling" data-sub="data-wrangling">Wrangling</a>
+        </div>
       </div>
       <div class="pin-item" data-target="ethics">
         <span class="thread"></span>
         <a href="#ethics"><span class="num">03</span>Ethics</a>
+        <div class="sub-links">
+          <a href="#ethics-stakeholders" data-sub="ethics-stakeholders">Stakeholders &amp; Risk</a>
+          <a href="#ethics-mitigations" data-sub="ethics-mitigations">Mitigations</a>
+        </div>
       </div>
       <div class="pin-item" data-target="analysis">
         <span class="thread"></span>
         <a href="#analysis"><span class="num">04</span>Analysis</a>
+        <div class="sub-links">
+          <a href="#analysis-methodology" data-sub="analysis-methodology">Methodology</a>
+          <a href="#analysis-results" data-sub="analysis-results">Results</a>
+        </div>
       </div>
       <div class="pin-item" data-target="viz">
         <span class="thread"></span>
         <a href="#viz"><span class="num">05</span>Findings</a>
+        <div class="sub-links">
+          <a href="#viz-figures" data-sub="viz-figures">Figures</a>
+          <a href="#viz-reading" data-sub="viz-reading">Reading the Picture</a>
+        </div>
       </div>
     </div>
     <div class="board-bottom mono">STATUS: OPEN</div>
@@ -42,8 +62,8 @@
     <!-- ============ HERO ============ -->
     <header class="hero" id="top">
       <span class="classification mono">DOSSIER · OSINT INVESTIGATION</span>
-      <h1 class="title display">[Your Project Title Goes Here]</h1>
-      <p class="subtitle-edit">[One or two sentences that pull the reader in — what mystery are you solving, and why should they care? Replace this with your real hook.]</p>
+      <h1 class="title display">Layoff Detector</h1>
+      <p class="subtitle-edit">Is your job burning? We can smell it from a mile away. Let us introduce our tool that helps you detect potential layoffs before they happen.</p>
       <div class="meta-strip mono">
         <div>INVESTIGATORS<span>[Name 1, Name 2, Name 3]</span></div>
         <div>OPENED<span>[Date]</span></div>
@@ -57,12 +77,12 @@
       <h2 class="sec-title display">The Question</h2>
       <p class="sec-intro">What are you actually asking, and why does it matter? Be specific enough that a stranger could tell whether your project answered it — and honest about what it can't tell them.</p>
 
-      <div class="card">
+      <div class="card" id="problem-question">
         <span class="tag">The Question</span>
         <p class="quote-block placeholder">"[State your investigative question as one sharp, answerable sentence. Not 'what can OSINT tell us about X' — the actual, specific question.]"</p>
       </div>
 
-      <div class="card">
+      <div class="card" id="problem-motivation">
         <span class="tag">Motivation</span>
         <h3>Why this, why now</h3>
         <p class="placeholder">[Explain who would want this answered and why. Avoid overselling — hedge appropriately about what your project can and can't establish. Two to four sentences is usually enough.]</p>
@@ -76,12 +96,12 @@
       <p class="sec-intro">Every dataset has a story. Tell it at a high level — no list of dataframe calls — and be upfront about anything (like API limits) that constrained you.</p>
 
       <div class="two-col">
-        <div class="card">
+        <div class="card" id="data-collection">
           <span class="tag">Collection</span>
           <h3>Source &amp; method</h3>
           <p class="placeholder">[Where did the data come from? Why does it fit the question? Mention scope, time range, and any access constraints — flag anything like API changes that limited what you could gather.]</p>
         </div>
-        <div class="card">
+        <div class="card" id="data-wrangling">
           <span class="tag">Wrangling</span>
           <h3>Cleaning &amp; shaping</h3>
           <p class="placeholder">[What state was the raw data in, and what did you do to it? Explain decisions that could affect the results — dedup, filtering, missing data handling — so a reader trusts what follows.]</p>
@@ -95,7 +115,7 @@
       <h2 class="sec-title display">Who This Affects</h2>
       <p class="sec-intro">"It's public data" is not an ethics discussion. Name the stakeholders, the risks, and what you actually did to limit harm.</p>
 
-      <div class="card">
+      <div class="card" id="ethics-stakeholders">
         <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span>
         <h3>Stakeholders &amp; risk</h3>
         <p class="placeholder">[Who could be affected by this project — directly or indirectly — and how? Consider people in the data, not just people using your results.]</p>
@@ -106,7 +126,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" id="ethics-mitigations">
         <span class="tag">Mitigations</span>
         <h3>What you did about it</h3>
         <p class="placeholder">[What concrete steps limited harm — anonymization, aggregation, exclusion of certain data, access controls? Be specific, not aspirational.]</p>
@@ -119,13 +139,13 @@
       <h2 class="sec-title display">What You Did, What It Shows</h2>
       <p class="sec-intro">Justify the method, then be honest about the results — including what they don't tell you.</p>
 
-      <div class="card">
+      <div class="card" id="analysis-methodology">
         <span class="tag">Methodology</span>
         <h3>Why this method</h3>
         <p class="placeholder">[Which technique(s) did you use, and why are they the right fit for this question and this data? Acknowledge any thresholds or parameter choices a skeptical reader might question.]</p>
       </div>
 
-      <div class="card">
+      <div class="card" id="analysis-results">
         <span class="tag">Execution &amp; Interpretation</span>
         <h3>Results, with appropriate skepticism</h3>
         <p class="placeholder">[Walk through what you found and how you got there. State what the results mean in plain terms, and be explicit about limitations, uncertainty, or gaps — don't let conclusions outrun the evidence.]</p>
@@ -138,13 +158,13 @@
       <h2 class="sec-title display">Show, Don't Just Tell</h2>
       <p class="sec-intro">A picture should be worth 1000 words here — clear, labelled, and honest about what it shows. Drop your charts and screenshots into the slots below.</p>
 
-      <div class="viz-grid">
+      <div class="viz-grid" id="viz-figures">
         <div class="viz-slot">[FIGURE 1 — replace with your visualization. Label axes, add a caption.]</div>
         <div class="viz-slot">[FIGURE 2 — replace with your visualization. Label axes, add a caption.]</div>
         <div class="viz-slot wide">[FIGURE 3 — a wider view: map, timeline, or network diagram]</div>
       </div>
 
-      <div class="card" style="margin-top:28px;">
+      <div class="card" id="viz-reading" style="margin-top:28px;">
         <span class="tag">Reading the picture</span>
         <p class="placeholder">[One or two sentences per figure explaining what the reader should notice and why it matters — don't just caption, interpret.]</p>
       </div>
