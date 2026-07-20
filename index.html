@@ -17,8 +17,10 @@
         <span class="thread"></span>
         <a href="#problem"><span class="num">01</span>Problem</a>
         <div class="sub-links">
-          <a href="#problem-question" data-sub="problem-question">The Question</a>
+          <a href="#problem-painpoint" data-sub="problem-painpoint">Pain Point</a>
+          <a href="#problem-statistics" data-sub="problem-statistics">Statistics</a>
           <a href="#problem-motivation" data-sub="problem-motivation">Motivation</a>
+          <a href="#problem-question" data-sub="problem-question">The Question</a>
         </div>
       </div>
       <div class="pin-item" data-target="data">
@@ -63,7 +65,7 @@
     <header class="hero" id="top">
       <span class="classification mono">DOSSIER · OSINT INVESTIGATION</span>
       <h1 class="title display">Layoff Detector</h1>
-      <p class="subtitle-edit">Is your job burning? We can smell it from a mile away. Let us introduce our tool that helps you detect potential layoffs before they happen.</p>
+      <p class="subtitle-edit">Is your job burning? We can smell it from a mile away. Let us introduce our tool that may warn you before layoffs happen.</p>
       <div class="meta-strip mono">
         <div>INVESTIGATORS<span> Bora Cömert <br> Alfredo Alberto Dinis Martins <br> Ngoc Phuong Vi Nguyen <br> Name 4 <br> Tim Daniel Stöcker </span></div>
         <div>OPENED<span> SoSe 2026</span></div>
@@ -75,17 +77,87 @@
     <section id="problem">
       <span class="eyebrow mono">01 — PROBLEM FORMULATION</span>
       <h2 class="sec-title display">The Question</h2>
-      <p class="sec-intro">What are you actually asking, and why does it matter? Be specific enough that a stranger could tell whether your project answered it — and honest about what it can't tell them.</p>
+      <p class="sec-intro">Why should we care about predicting layoffs in the first place?</p>
+      
+      <div class="card pain" id="problem-painpoint">
+        <span class="tag">The Pain Point</span>
+        <h3> Alex's Story: What a Layoff actually means</h3>
+        <h4>Day Zero</h4>
+        <p >
+          On a sunny Tuesday 9:13 a.m, A calender invite titled "Quick Sync" appears in Alex's calendar.
+        </p>
+        <p > 
+          By 9:15 a.m, Alex, a 50-year-old family father and a software engineer by heart, is sitting in front of his laptop, waiting for the meeting to start. 
+          The meeting starts and Alex's manager informs him that he is being laid off.
+          Alex is shocked and confused. 
+          He has been working at the company for 25 years and has never received any negative feedback before.
+          He worked in the company through good and bad times.
+          He knows every client by name, every project inside out, and has been a loyal employee for years.
+          HR call it "restructuring" and by lunch, Alex is packing his things and leaving the office for the last time, with his stuff stuffed inside a tiny cardboard box.
+          He is now left with no job, no income, and no idea what to do next.
+        </p>
+        <h4>After one Month</h4>
+        <p> 
+          The health insurance that covers his wifes ongoing cancer treatment will be terminated.
+          Fortunatly, Alex has some savings, but they are not enough to cover the medical expenses and the mortgage for a longer period of time.
+          While financial aid exists on paper, it's not enough to cover all expenses, especially for a family of four.
+          The stress and anxiety of not knowing how to pay for his family's needs is taking a toll on Alex's mental health.
+          He needs to ask for help from his friends and family, but he feels ashamed and embarrassed to do so.
+          But there is no other option, and he has to swallow his pride and reach out for help.
+        </p>
+        <h4>After Three Months</h4>
+         <p > 
+          Alex is struggling to make ends meet with gigs, the savings are running low, and the bills are piling up. 
+          He is working forty, fifty, sixty hours a week to keep everything together writing applications and supporting his wife, most applications are answered with silence or a templated rejection email.
+          His identity and self-worth build over decades as "the guy who can fix anything" , "the guy people call when they face a problem they can not solve", "the one that gets things done" is now shattered.
+          He stopped mentioning the search to colleques and friends, since you can only say "still looking" so many times ...
+          His 17-year-old daughter is now working part-time on minimum wage to help support the family, but her grades are slipping, and she is struggling to keep up with schoolwork.
+          His 9-year-old son is understanding that something is wrong, they are saving money and trying to help out, but he is too young to understand the full extent of the situation.
+        </p>
+        <h4>After Six Months</h4>
+         <p>
+          Alex finally finds a new job, but it's not in his field.
+          He is working longer hours for less pay, and he is not satisfied with the work he is doing, but it pays the bills.
+          At least his current job provides health insurance and he can now afford his wife's treatment and his mortgage, but he is still paying off credit card debt.
+          Repaying the depts will take a long time, not even thinking about saving for his children's education or retirement.
+          During this time, he thought about "ending it all" but only the thought of his family kept him going.
+         </p>
+      </div>
 
-      <div class="card" id="problem-question">
-        <span class="tag">The Question</span>
-        <p class="quote-block placeholder">"[State your investigative question as one sharp, answerable sentence. Not 'what can OSINT tell us about X' — the actual, specific question.]"</p>
+      <div class="card" id = "problem-statistics">
+        <span class="tag">The Cold Truth</span>
+        <h3>The Statistics about Layoffs we need to keep in Mind </h3>
+        <li class="placeholder">nearly one-quarter of families have less than $400 in available liquidity, and about 60 percent of families do not have a liquid savings cushion of at least 3 months of expenses SRC:https://www.federalreserve.gov/econres/notes/feds-notes/assessing-families-liquid-savings-using-the-survey-of-consumer-finances-20181119.html</li>
+        <li class="placeholder"> As of January 2026, about 1.835 million people in the U.S were unemployed for 27 weeks or longer. SRC: https://www.onlinemswprograms.com/resources/long-term-unemployment/</li>
+        <li class="placeholder">unemployment is linked to higher depression, anxiety, and other mental health issues. SRC: https://www.cnbc.com/amp/2026/06/04/long-term-unemployment-economy-jobs.html</li>
+        <li class="placeholder">researchers submitted 40.000 fictional job offers and found applicants aged 64-66 got 35% fewer callbacks then other applicants. SRC: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10735768/</li>
+        <li class="placeholder">health treatment is often tied to employment, and losing a job can mean losing access to necessary medical care. SRC: https://pnhp.org/news/study-finds-most-pulled-into-debt-by-illness-have-jobs-health-insuranceassociated-press/</li>
+        <li class="placeholder">effects of job loss effects younger children strongly. Effects over lifetime. SRC: https://www.brookings.edu/articles/how-having-unemployed-parents-affects-childrens-future-well-being/  </li>
+        <li class="placeholder">meta analysis pooling multiple studies found unemployment is associated with an odds ratio of 1.87 for suicide mortality,... SRC: Int. J. Mental Health, 2020</li>
+        <br>
+        <p> SRC needs to be checked for accuracy and updated if necessary.</p>
       </div>
 
       <div class="card" id="problem-motivation">
         <span class="tag">Motivation</span>
-        <h3>Why this, why now</h3>
-        <p class="placeholder">[Explain who would want this answered and why. Avoid overselling — hedge appropriately about what your project can and can't establish. Two to four sentences is usually enough.]</p>
+        <h3>How could we help?</h3>
+        <p>
+          For some people, getting out of bed some mornings is the hardest thing on their list.
+          People are not just numbers, they are human beings with families, responsibilities, and dreams.
+          Getting laid off is not just a financial setback, it is a life-altering event that can have long-lasting effects on a person's mental health, relationships, and overall well-being.
+          Someone with a family, with a mortgage, with a sick spouse, with children, with dreams and aspirations, can be completely derailed by a layoff.
+          Here is where we come in, we want to help people like Alex, who are facing the uncertainty and stress of a layoff.
+          Many people get blindsided by layoffs, and they are left with no time to prepare, no time to save, and no time to find a new job.
+          If we can predict layoffs, we can give those people a chance to prepare...
+         With enough time to save, to find a new job, to plan for the future, and to protect their and their family's mental health and well-being.
+         </p>
+      </div>
+
+      <div class="card" id="problem-question">
+        <span class="tag">The Research Question</span>
+        <p> Therefore we ask the following questions:</p>
+        <p class="quote-block placeholder">RQ 1: Based on publicly available information, is it possible to predict whether a company had or is likely to have layoffs?</p>
+        <p class="quote-block placeholder">RQ 2: Assuming we are able to predict layoffs with public available information, can we also predict layoffs in a 3 - 6 month timeframe?</p>
       </div>
     </section>
 
@@ -172,7 +244,7 @@
 
     <footer class="mono">
       <p class="status">CASE STATUS: OPEN — AWAITING PRESENTATION [15.07.2026]</p>
-      <p>[Project Title] — a Computational OSINT investigation.</p>
+      <p>Layoff Detector — a Computational OSINT investigation.</p>
     </footer>
 
   </main>
