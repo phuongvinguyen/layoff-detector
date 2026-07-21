@@ -197,28 +197,30 @@
             <tr>
                 <th>Dataset Name</th>
                 <th>URL</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><strong>Layoffs FYI</strong></td>
                 <td><a href="https://layoffs.fyi/" target="_blank">https://layoffs.fyi/</a></td>
+                <td>Crowd-sourced tracker (global, many industries)</td>
             </tr>
             <tr>
                 <td><strong>WARN Data</strong></td>
                 <td><a href="https://web.archive.org/web/20260509102542/https://layoffdata.com/data/" target="_blank">https://web.archive.org/web/20260509102542/https://layoffdata.com/data/</a></td>
-            </tr>
+                <td>US WARN-act filings for 2026</td>
+              </tr>
             <tr>
                 <td><strong>NASDAQ</strong></td>
                 <td><a href="https://github.com/datasets/nasdaq-listings" target="_blank">https://github.com/datasets/nasdaq-listings</a></td>
+                <td>US WARN-act filings up to end of 2025</td>
             </tr>
         </tbody>
     </table>
 
       <h2 class="sec-title display">Methods of data Collection</h2>
 
-            <p class="placeholder">[Our data came mainly from 3 different sources. First, the Layoffs FYI ]</p>
-        
         <p class="placeholder">Our analysis incorporates data from three primary sources: Layoffs FYI, NASDAQ, and WARN (Worker Adjustment and Retraining Notification) data.</p>
         
         <p class="placeholder">NASDAQ and WARN data were obtained via direct CSV downloads and processed using the yfinance library for financial data retrieval. Website content was converted to PDF format for archival purposes.</p>
@@ -227,45 +229,223 @@
             <p><strong>Note on WARN Data Accessibility:</strong> While WARN data from layoffdata.com is currently behind a paywall (USD 2,000), this information remains legally accessible through official state records.</p>
         </div>
 
-      <h2 class="sec-title display">Data Wrangling</h2>
-
+        
+        
+        <h2 class="sec-title display">Data Pipeline</h2>
+        <p class="placeholder">The flowchart above guides you on the main files and stages of our data pipeline. Please check the corresponding files in our codebase for more implementation details.</p>
   
-      <h2 class="sec-title display">Data Pipeline</h2>
-    The flowchart above guides you on the main files and stages of our data pipeline.
-  <pre class="mermaid">
-  flowchart TD
-      subgraph DataRoot["OSINT and DATA Pipeline (layoff detector)"]
+        <pre class="mermaid">
+          flowchart TD
+          subgraph DataRoot["OSINT and DATA Pipeline (layoff detector)"]
           Z[Direction] --> B[Collection] --> P[Processing] --> A[Analysis] --> E[Dissemination]
           P -->|feedback loop| B
-
+          
           subgraph Order_Collection ["Data Collection Order"]
-              I["pdf_to_csv.ipynb"] --> H["get_finance_data.ipynb"] 
+          I["pdf_to_csv.ipynb"] --> H["get_finance_data.ipynb"] 
           end
-
+          
           subgraph Order_Processing ["Processing Order"]
-              J["fix_ticker_conflicts_and_relabel.ipynb"] -.-> K["label_layoff.ipynb"]
-              K --> L["generate_layoffs.ipynb"]
-              L --> M["merged_bs_cs_fd.ipynb"]
+          J["fix_ticker_conflicts_and_relabel.ipynb"] -.-> K["label_layoff.ipynb"]
+          K --> L["generate_layoffs.ipynb"]
+          L --> M["merged_bs_cs_fd.ipynb"]
           end
-
+          
           subgraph Order_Analysis ["Analysis Order"]
-              N["ml_test.ipynb"]
+          N["ml_test.ipynb"]
           end
           
           P -.-> J
           A -.-> N
           B -.-> I
-      end
-  </pre>
+          end
+        </pre>
 
-      <h2 class="sec-title display">Where It Came From</h2>
+        <h2 class="sec-title display">Data Wrangling (Data Processing)</h2>
 
-      <p class="sec-intro">Every dataset has a story. Tell it at a high level — no list of dataframe calls — and be upfront about anything (like API limits) that constrained you.</p>
+      <p class="placeholder">Our analysis focuses on three datasets: <strong>fyi_layoffs.csv</strong> (<strong>DD.MM.YYYY</strong>), <strong>WARNDatabase2026.csv</strong> (<strong>DD/MM/YYYY</strong>), and <strong>WARNDatabaseMasterExcluding2026.csv</strong> (<strong>MM/DD/YYYY</strong>). Due to inconsistent date formatting across sources, we normalize all dates to the <strong>ISO 8601 standard format (YYYY-MM-DD)</strong> to ensure accurate sorting and temporal comparisons.</p>
 
-      <div class="two-col">
-        <div class="card" id="data-collection">
-          <span class="tag">Collection</span>
-          <h3>Source &amp; method</h3>
+      Example of data representation for this step:
+      
+    <!-- ===== TABLE 1: FYI LAYOFFS ===== -->
+    <div class="table-container">
+        <div class="table-title">
+            <span>FYI Layoffs</span>
+            <span class="badge">fyi_layoffs.csv</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company Name</th>
+                    <th>Layoff Size</th>
+                    <th>Date</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-index">0</td>
+                    <td><strong>Cloudflare</strong></td>
+                    <td class="layoff-number">1,100</td>
+                    <td class="date">2026-05-07</td>
+                    <td><span class="source-tag fyi">fyi_layoffs.csv</span></td>
+                </tr>
+                <tr>
+                    <td class="row-index">1</td>
+                    <td><strong>Bill.com</strong></td>
+                    <td class="layoff-number">709</td>
+                    <td class="date">2026-05-07</td>
+                    <td><span class="source-tag fyi">fyi_layoffs.csv</span></td>
+                </tr>
+                <tr>
+                    <td class="row-index">2</td>
+                    <td><strong>Ticketmaster</strong></td>
+                    <td class="layoff-number">350</td>
+                    <td class="date">2026-05-07</td>
+                    <td><span class="source-tag fyi">fyi_layoffs.csv</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer-note">3 rows · Source: layoffs.fyi</div>
+    </div>
+
+    <!-- ===== TABLE 2: WARN DATA 2026 ===== -->
+    <div class="table-container">
+        <div class="table-title">
+            <span>WARN Data 2026</span>
+            <span class="badge warn">WARNDatabase2026.csv</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company Name</th>
+                    <th>Layoff Size</th>
+                    <th>Date</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-index">0</td>
+                    <td><strong>Bush Industries, Inc.</strong></td>
+                    <td class="layoff-number">51</td>
+                    <td class="date">2026-05-01</td>
+                    <td><span class="source-tag warn">WARNDatabase2026.csv</span></td>
+                </tr>
+                <tr>
+                    <td class="row-index">1</td>
+                    <td><strong>Dometic</strong></td>
+                    <td class="layoff-number">89</td>
+                    <td class="date">2026-05-01</td>
+                    <td><span class="source-tag warn">WARNDatabase2026.csv</span></td>
+                </tr>
+                <tr>
+                    <td class="row-index">2</td>
+                    <td><strong>PET CLUB</strong></td>
+                    <td class="layoff-number">6</td>
+                    <td class="date">2026-05-13</td>
+                    <td><span class="source-tag warn">WARNDatabase2026.csv</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer-note">3 rows · Source: WARNDatabase2026.csv</div>
+    </div>
+
+    <!-- ===== TABLE 3: WARN DATA  ===== -->
+    <div class="table-container">
+        <div class="table-title">
+            <span>WARN Data Master (Excl. 2026)</span>
+            <span class="badge warn-master">WARNDatabaseMasterExcluding2026.csv</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Company Name</th>
+                    <th>Layoff Size</th>
+                    <th>Date</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-index">0</td>
+                    <td><strong>Vacuum Technique LLC</strong></td>
+                    <td class="layoff-number">78</td>
+                    <td class="date">2025-12-31</td>
+                    <td><span class="source-tag warn-master">WARNDatabaseMasterExcluding2026.csv</span></td>
+                </tr>
+                <tr>
+                    <td class="row-index">1</td>
+                    <td><strong>Kroehler Furniture Co.</strong></td>
+                    <td class="layoff-number">208</td>
+                    <td class="date">2025-12-30</td>
+                    <td><span class="source-tag warn-master">WARNDatabaseMasterExcluding2026.csv</span></td>
+                </tr>
+                <tr>
+                    <td class="row-index">2</td>
+                    <td><strong>Mare Island Dry Dock, LLC</strong></td>
+                    <td class="layoff-number">84</td>
+                    <td class="date">2025-12-30</td>
+                    <td><span class="source-tag warn-master">WARNDatabaseMasterExcluding2026.csv</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="footer-note">3 rows · Source: WARNDatabaseMasterExcluding2026.csv</div>
+    </div>
+
+      <pre class="mermaid">
+        graph LR
+
+        A["fyi_layoffs.csv - DD.MM.YYYY"]
+        B["WARNDatabase2026.csv - DD/MM/YYYY"]
+        C["WARNDatabaseMasterExcluding2026.csv - MM/DD/YYYY"]
+        NORM["Parse dates, normalize schema and merge into one dataset"]
+
+        A --> NORM
+        B --> NORM
+        C --> NORM
+
+        D["NASDAQ.csv"]
+        FT["Fetch tickers"]
+        D --> FT
+
+        UP["Uppercase company names"]
+        INT["Remove overlap data"]
+
+        NORM --> UP --> INT
+
+        subgraph VERT[" "]
+            direction TB
+            TICK["Remove companies without tickers"]
+            BAD["Filter bad or shared tickers"]
+            FETCH["Fetch data from yfinance"]
+            FIN["Merge financial data - features and quarters"]
+            LABEL["Label layoff 1 or 0"]
+            O1["tickers"]
+            O2["features"]
+            O3["label (0/1)"]
+
+            TICK --> BAD --> FETCH --> FIN --> LABEL
+            LABEL -.-> O1
+            LABEL -.-> O2
+            LABEL -.-> O3
+            LABEL -->|feedback loop| TICK
+        end
+
+        INT --> FT
+        FT --> TICK
+        </pre>
+
+        <h2 class="sec-title display">Where It Came From</h2>
+        
+        <p class="sec-intro">Every dataset has a story. Tell it at a high level — no list of dataframe calls — and be upfront about anything (like API limits) that constrained you.</p>
+        
+        <div class="two-col">
+          <div class="card" id="data-collection">
+            <span class="tag">Collection</span>
+            <h3>Source &amp; method</h3>
           <p class="placeholder">[Where did the data come from? Why does it fit the question? Mention scope, time range, and any access constraints — flag anything like API changes that limited what you could gather.]</p>
         </div>
         <div class="card" id="data-wrangling">
