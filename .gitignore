@@ -1,1 +1,8 @@
 __pycache__
+.venv
+venv
+layoff.egg-info
+/dist
+layoff/layoff.egg-info
+layoff/__pycache__
+dist

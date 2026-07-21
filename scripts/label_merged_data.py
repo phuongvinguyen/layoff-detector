@@ -1,24 +1,17 @@
 from __future__ import annotations
-
-from pathlib import Path
-
 import pandas as pd
+from layoff import config
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = PROJECT_ROOT / "data"
-FEATURES_PATH = DATA_DIR / "processed" / "merged_bs_cs_fd.csv"
-RAW_LAYOFFS_PATH = DATA_DIR / "processed" / "layoffs_with_tickers.csv"
-CLEANED_LAYOFFS_PATH = DATA_DIR / "processed" / "layoffs_with_tickers_cleaned.csv"
-OUTPUT_PATH = DATA_DIR / "processed" / "labeled_merged_data.csv"
-FALLBACK_OUTPUT_PATH = DATA_DIR / "processed" / "labeled_merged_data_cleaned.csv"
-
+FEATURES_PATH = config.DATA_PROCESSED / "merged_bs_cs_fd.csv"
+RAW_LAYOFFS_PATH = config.DATA_PROCESSED / "layoffs_with_tickers.csv"
+CLEANED_LAYOFFS_PATH = config.DATA_PROCESSED / "layoffs_with_tickers_cleaned.csv"
+OUTPUT_PATH = config.DATA_PROCESSED / "labeled_merged_data.csv"
+FALLBACK_OUTPUT_PATH = config.DATA_PROCESSED / "labeled_merged_data_cleaned.csv"
 
 def choose_layoff_input() -> Path:
     if CLEANED_LAYOFFS_PATH.exists():
         return CLEANED_LAYOFFS_PATH
     return RAW_LAYOFFS_PATH
-
 
 def main() -> None:
     layoff_input = choose_layoff_input()
