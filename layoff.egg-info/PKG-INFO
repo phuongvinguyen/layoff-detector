@@ -1,0 +1,8 @@
+Metadata-Version: 2.4
+Name: layoff
+Version: 0.1
+Requires-Dist: yfinance
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: tabula-py
+Dynamic: requires-dist
