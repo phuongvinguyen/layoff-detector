@@ -263,6 +263,29 @@ h2.sec-title{
   color:#8b7f6d;
 }
 
+.card img{
+  max-width:100%;
+  height:auto;
+  display:block;
+  margin:16px auto;
+}
+.card img.img-sm{ max-width:50%; }
+.card img.img-md{ max-width:75%; }
+
+.card figure{
+  margin:16px auto;
+}
+.card figure img{ margin:0; }
+.card figure.img-sm{ max-width:50%; }
+.card figure.img-md{ max-width:75%; }
+.card figcaption{
+  margin-top:8px;
+  font-size:13px;
+  font-style:italic;
+  color:#8b7f6d;
+  text-align:center;
+}
+
 .two-col{
   display:grid;
   grid-template-columns:1fr 1fr;
