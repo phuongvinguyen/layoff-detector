@@ -139,7 +139,7 @@ main{ min-width:0; }
 
 section{
   padding:96px 64px;
-  max-width:900px;
+  max-width:1200px;
 }
 
 /* ---------- hero ---------- */
@@ -368,7 +368,7 @@ footer{
   color:#4a4f56;
   font-size:11px;
   font-family:"Courier New",monospace;
-  max-width:900px;
+  max-width:1200px;
 }
 footer .status{
   color:var(--redact);
