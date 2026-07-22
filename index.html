@@ -509,7 +509,8 @@
       <div class="card" id="analysis-methodology">
         <span class="tag">The investigation</span>
         <h3>Our approach [draft]</h3>
-        <p>To address our reasearch questions, we formulate layoff prediction as supervised binary classification (layoff or non-layoff) using quarterly company financial data, includingbalance sheet, financial data and cashflow.
+        <p>To address our reasearch questions, we formulate layoff prediction as supervised binary classification (layoff or non-layoff) using quarterly company financial data,
+          including balance sheet, financial data and cashflow.
           After processing, the dataset contains approximately 30,000 company-quarters across 5,381 companies.
           The dataset for the first research question (RQ1) is balanced, with approximately 12,047 positive layoff rows and 17,971 negative non-layoff rows. 
           However, the dataset for the second research question (RQ2) is more imbalanced, with approximately 1,205 positive layoff rows and 28,813 negative non-layoff rows.
@@ -526,11 +527,22 @@
           Logistic Regression, Random Forest, Gradient Boosting, XGBoost, SVM, KNN, and a Decision Tree.
           Since the relationship between financial indicators and layoffs is unlikely to be purely linear, 
           tree-based ensemble methods were included to capture more complex interactions among the features.</p>
-        <p style="margin-top:14px;">All models are trained using the same preprocessing pipeline to ensure a fair comparison: <br>
-          median imputation with missingness indicators (companies disclose wildly different line items, so "this field is absent" is itself informative), 
-          a variance filter to drop constant columns, and &mdash; for distance - and gradient-based models — standard scaling. 
-          We evaluate with stratified 5-fold cross-validation plus a held-out test split, and report both ROC-AUC and PR-AUC, since layoffs are rare events (roughly 4% of company-quarters in the near-term framing) and ROC-AUC alone flatters a model that is actually poor at precision.</p>
-        <p style="margin-top:14px;">Two choices a skeptical reader should push on: every column derived from the label itself (company, date, quarter, and all layoff/next-quarter flags) is dropped from the feature set to prevent leakage. And because a tool that cries wolf every quarter is worse than useless, our latest pipeline tunes the classification threshold against an F-beta score (β = 0.25) that explicitly favors precision over recall — we'd rather under-call than flood users with false alarms. That is a judgment call, not a neutral default, and reasonable people could weight it differently.</p>
+        <p style="margin-top:14px;">All models are trained using the same preprocessing pipeline to ensure a fair comparison.<br>
+          Missing numberical values are imputed with the median value for each feature, and binary missingness indicators are added because
+          the absence of financial data itself may contain helpful information. Moreover, the features no variance are dropped,
+          and stadardization is applied to ensure that all features contribute equally to the model's learning process.</p>
+
+          <p style="margin-top:14px;">Model performance is evaluated using stratified 5-fold cross-validation together with a held-out test set.
+            Because layoffs represent only about 4% of the observations, both ROC-AUC and Precision-Recall AUC are reported to provide a more
+            informative evaluation for highly imbalanced classification problem.
+          </p>
+          
+        <p style="margin-top:14px;">
+          To prevent data leakage, all variables related to the target label, including the company's name, tickers, and any other identifiers, are excluded 
+          fromt he feature set before training. In addition, the classification threshold is optimized using the F-beta score with beta=0.5, 
+          which prioritizes precision over recall to minimize false positives. Although this may reduce the number of detected layoffs,
+          it produces prediction that are more reliable for users and can be adjusted depending on the intended applications.
+        </p>
       </div>
 
       <div class="card" id="analysis-results">
