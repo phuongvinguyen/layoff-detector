@@ -504,23 +504,33 @@
         <div class="stakeholder-row">
           <div class =stakeholder-column>
             <span class="chip">Employees</span>
-            <p > aaaaaaaaa</p>
+            <p > False positives may create unnecessary concern and affect career decisions, while false negatives 
+                gives a false sense of job security. </p>
           </div>
 
           <div class =stakeholder-column>
             <span class="chip">Company</span>
-            <p >aaa aaaaaa</p>
+            <p >Incorrect predictions may damage the companies reputation and diminish employee morale.</p>
+            <br>
+            <p> Predictions whether correct or incorrect may affect future investments or the stock value.</p>
           </div>
 
           </div>
         </div>
         
   
-
       <div class="card" id="ethics-mitigations">
         <span class="tag">Mitigations</span>
-        <h3>What you did about it</h3>
-        <p class="placeholder">[What concrete steps limited harm — anonymization, aggregation, exclusion of certain data, access controls? Be specific, not aspirational.]</p>
+        <h3>How we limited harm</h3>
+        <p class="placeholder">What concrete steps limited harm </p>
+
+        <p > We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
+            employee-level data, sensitive information, or personally identifiable
+            information.
+       </p>
+       <br>
+       <p> The intended use of the model is to support decision-making and should not be used to make decisions about financial matters on their own.</p>
+
       </div>
     </section>
 
@@ -626,7 +636,7 @@
         <h3>RQ1: Based on publicly available information, is it possible to predict whether a company had or is likely to have layoffs? </h3>
         <h2> Yes! </h2>
         <!-- add equation for ROC-AUC time permitting-->
-        <p> We are able to predict a companies likelihood of having layoffs with 97% accuracy. Accuracy in this context is represented by the ROC- AUC which depicts true positive + true negative / total possible outcomes. Below is an image showcasing ROC- AUC accuracy based on the top performing model; \bold{XGBoost}. For a more detailed view on how we got to choosing this model, please refer to the analysis section.</p> 
+        <p> We are able to predict a companies likelihood of having layoffs with 97% accuracy. Accuracy in this context is represented by the ROC- AUC which depicts true positive + true negative / total possible outcomes. Below is an image showcasing ROC- AUC accuracy based on the top performing model; <strong>XGBoost</strong>. For a more detailed view on how we got to choosing this model, please refer to the analysis section.</p> 
         <img src="images/findings/XGBoostTestSetPredictions.png" alt="Results All" />
         <p> This image is a represenative depction of the XGBoost models accuracy. Every point is a company in a given time period with their respective predictions. The X-axis represents the trained models predictions, while the Y-axis is representative of the actual outcomes from the collected data. Following the resulting 97% accuracy of the XGBoost model, the image demonstrates the majority of the model's prediction aligns with the actual outcome true positive true negative (add actual values). This means only 3% of the outcomes were false positives or false negatives.</p>
         <p> Bora to add secondary confusion matrix for more context to models performance accueracy PLUS time permitting top 10 feature overview</p>
@@ -636,14 +646,16 @@
     <div class="card" id="viz-reading" style="margin-top:28px;">
         <span class="tag">Findings; In-depth review </span>
         <h3>RQ2: If so, is it possible to predict it in a 3-6 month timeframe? </h3>
-        <h2> Nope! </h2>
+        <h2> No, not reliably with the data available </h2>
         <!-- add equation for ROC-AUC time permitting-->
-        <p> Explain why it is not possible to predict layoffs in a 3-6 month timeframe. 
-          Tim's notes: No, more data is needed. When filtering in the timeframe, we get a heavily one sided dataset with 20: 1 ratio. Models are not able to overcome this</p> 
-        <img src="images/findings/XGBoostTestSetPredictions.png" alt="Results All" />
-        <p> This image is a represenative depction of the XGBoost models accuracy. Every point is a company in a given time period with their respective predictions. The X-axis represents the trained models predictions, while the Y-axis is representative of the actual outcomes from the collected data. Following the resulting 97% accuracy of the XGBoost model, the image demonstrates the majority of the model's prediction aligns with the actual outcome true positive true negative (add actual values). This means only 3% of the outcomes were false positives or false negatives.</p>
+        <p> 
+          There were approximately 20 companies without a record of layoff for every company with a record of layoff. This means that the dataset was highly imbalanced, which made it difficult for the model to learn the patterns associated with layoffs. The model was able to achieve a ROC-AUC of 0.87, but the precision and recall were low, which means that the model was not able to accurately predict layoffs in a 3-6 month timeframe.
+        
+        </p> 
+       <br>
         <p> Bora to add secondary confusion matrix for more context to models performance accueracy PLUS time permitting top 10 feature overview</p>
-        <!-- <p class="placeholder">Here we will explai this image</p> -->
+         <img src="" alt="Results All" />
+        <!-- <p class="placeholder">Here we will explain this image</p> -->
       </div>      
 
     <footer class="mono">
