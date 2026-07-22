@@ -546,7 +546,7 @@
           the absence of financial data itself may contain helpful information. Moreover, the features no variance are dropped,
           and stadardization is applied to ensure that all features contribute equally to the model's learning process.</p>
 
-          <p style="margin-top:14px;">Model performance is evaluated using stratified 5-fold cross-validation together with a held-out test set.
+          <p style="margin-top:14px;">Model performance is evaluated using stratified 5-fold cross-validation together with a held-out test set. [SF: PLS EXPLAIN WHAT THAT MEANS] 
             Because layoffs represent only about 4% of the observations, both ROC-AUC and Precision-Recall AUC are reported to provide a more
             informative evaluation for highly imbalanced classification problem.
           </p>
@@ -588,6 +588,7 @@
         <p style="margin-top:14px;"><strong>RQ2</strong> — predicting a layoff in the same or next quarter, the framing that would actually let someone act early — is a much harder problem. 
           Because true positives are only ~4% of rows, accuracy is a misleading headline number (~0.95, driven almost entirely by the majority class). Our best model here, Random Forest, reached test ROC-AUC 0.87, but precision and recall on the layoff class itself were only 0.41 and 0.28 (F1 0.33) before threshold tuning.</p>
         <p style="margin-top:14px;">Read plainly: financial fundamentals carry a real, learnable signal for "does this company's profile resemble one that has layoffs" — but we cannot yet reliably answer "will it happen in the next one to two quarters" from public financials alone. Many real layoff triggers (leadership decisions, M&amp;A, strategic pivots) simply aren't visible in balance-sheet numbers months in advance. Our latest pipeline iteration deliberately trades recall for precision via threshold tuning, on the view that a confident false alarm damages trust more than a missed one — but that run currently fails before producing metrics: the imputer is fed a raw ticker column and errors out trying to average a string. Until that's fixed, the untuned RQ2 numbers above are the ones to trust.</p>
+         <p> SF: it would be nice to explain the top 10 features of XGBoost here</p> 
       </div>
     </section>
 
@@ -597,17 +598,43 @@
       <h2 class="sec-title display">Show, Don't Just Tell</h2>
       <p class="sec-intro">A picture should be worth 1000 words here — clear, labelled, and honest about what it shows. Drop your charts and screenshots into the slots below.</p>
 
-      <div class="viz-grid" id="viz-figures">
+     <!--  <div class="viz-grid" id="viz-figures">
         <div class="viz-slot">[FIGURE 1 — replace with your visualization. Label axes, add a caption.]</div>
         <div class="viz-slot">[FIGURE 2 — replace with your visualization. Label axes, add a caption.]</div>
         <div class="viz-slot wide">[FIGURE 3 — a wider view: map, timeline, or network diagram]</div>
       </div>
 
-      <div class="card" id="viz-reading" style="margin-top:28px;">
+     <div class="card" id="viz-reading" style="margin-top:28px;">
         <span class="tag">Reading the picture</span>
         <p class="placeholder">[One or two sentences per figure explaining what the reader should notice and why it matters — don't just caption, interpret.]</p>
       </div>
     </section>
+    -->
+
+    <div class="card" id="viz-reading" style="margin-top:28px;">
+        <span class="tag">Findings; In-depth review </span>
+        <h3>RQ1: Based on publicly available information, is it possible to predict whether a company had or is likely to have layoffs? </h3>
+        <h2> Yes! </h2>
+        <!-- add equation for ROC-AUC time permitting-->
+        <p> We are able to predict a companies likelihood of having layoffs with 97% accuracy. Accuracy in this context is represented by the ROC- AUC which depicts true positive + true negative / total possible outcomes. Below is an image showcasing ROC- AUC accuracy based on the top performing model; \bold{XGBoost}. For a more detailed view on how we got to choosing this model, please refer to the analysis section.</p> 
+        <img src="images/findings/XGBoostTestSetPredictions.png" alt="Results All" />
+        <p> This image is a represenative depction of the XGBoost models accuracy. Every point is a company in a given time period with their respective predictions. The X-axis represents the trained models predictions, while the Y-axis is representative of the actual outcomes from the collected data. Following the resulting 97% accuracy of the XGBoost model, the image demonstrates the majority of the model's prediction aligns with the actual outcome true positive true negative (add actual values). This means only 3% of the outcomes were false positives or false negatives.</p>
+        <p> Bora to add secondary confusion matrix for more context to models performance accueracy PLUS time permitting top 10 feature overview</p>
+        <!-- <p class="placeholder">Here we will explai this image</p> -->
+      </div>
+
+    <div class="card" id="viz-reading" style="margin-top:28px;">
+        <span class="tag">Findings; In-depth review </span>
+        <h3>RQ2: If so, is it possible to predict it in a 3-6 month timeframe? </h3>
+        <h2> Nope! </h2>
+        <!-- add equation for ROC-AUC time permitting-->
+        <p> Explain why it is not possible to predict layoffs in a 3-6 month timeframe. 
+          Tim's notes: No, more data is needed. When filtering in the timeframe, we get a heavily one sided dataset with 20: 1 ratio. Models are not able to overcome this</p> 
+        <img src="images/findings/XGBoostTestSetPredictions.png" alt="Results All" />
+        <p> This image is a represenative depction of the XGBoost models accuracy. Every point is a company in a given time period with their respective predictions. The X-axis represents the trained models predictions, while the Y-axis is representative of the actual outcomes from the collected data. Following the resulting 97% accuracy of the XGBoost model, the image demonstrates the majority of the model's prediction aligns with the actual outcome true positive true negative (add actual values). This means only 3% of the outcomes were false positives or false negatives.</p>
+        <p> Bora to add secondary confusion matrix for more context to models performance accueracy PLUS time permitting top 10 feature overview</p>
+        <!-- <p class="placeholder">Here we will explai this image</p> -->
+      </div>      
 
     <footer class="mono">
       <p class="status">CASE STATUS: OPEN — AWAITING PRESENTATION [15.07.2026]</p>
