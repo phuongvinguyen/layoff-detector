@@ -649,12 +649,16 @@
         <h2> No, not reliably with the data available </h2>
         <!-- add equation for ROC-AUC time permitting-->
         <p> 
-          There were approximately 20 companies without a record of layoff for every company with a record of layoff. This means that the dataset was highly imbalanced, which made it difficult for the model to learn the patterns associated with layoffs. The model was able to achieve a ROC-AUC of 0.87, but the precision and recall were low, which means that the model was not able to accurately predict layoffs in a 3-6 month timeframe.
-        
+          There were approximately 20 companies without a record of layoff for every company with a record of layoff. 
+          This means that the dataset was highly imbalanced, which made it difficult for the model to learn the patterns associated with layoffs. 
+          Our best performing model, Random Forest, achieved a ROC-AUC of 0.87, but the precision and recall on the layoff class were only 0.41 and 0.28. meaning that
+          approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. This is not a reliable enough prediction to be useful in practice.
         </p> 
-       <br>
-        <p> Bora to add secondary confusion matrix for more context to models performance accueracy PLUS time permitting top 10 feature overview</p>
+        <br>
          <img src="" alt="Results All" />
+         <p> Therefore the results suggest that layoffs cannot be reliably predicted in a 3-6 month timeframe with the available data.</p>
+
+
         <!-- <p class="placeholder">Here we will explain this image</p> -->
       </div>      
 
