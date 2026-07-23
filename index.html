@@ -336,53 +336,56 @@
         
         <img src="images/data-collection/suspicious_tickers_deleted.png" alt="Invalid or duplicate tickers removed" />
 
+        <br>
+        
+        <p>
+            This is an <strong>intermediate dataset</strong> that can be continuously updated as new reports become available.
+            In this project, <strong>quarterly cash flow and income statement data were collected using yfinance</strong>
+            and merged with the layoff dataset as financial features for model training.
+        </p>
+
+        <h4>Financial Feature Extraction &amp; Normalization</h4>
+
+        <p>
+            Raw yfinance data includes three financial statement categories:
+            <strong>balance sheet, cash flow statement, and income statement</strong>.
+            Since raw values vary significantly across companies, they were transformed into
+            <strong>normalized financial features</strong>, including ratios, per-share metrics, and standardized values.
+            This resulted in <strong>347 financial features per company-quarter record</strong> with a consistent structure.
+        </p>
+
+        <p>
+            Financial features were aligned across datasets using the <strong>union of all available features</strong>.
+            Missing values were stored as <strong>NaN</strong>, allowing machine learning models to handle or
+            impute incomplete information while maintaining a consistent feature matrix.
+        </p>
 
         <br>
-        <h3>Financial Feature Merging</h3>
-        <p>This is an intermediate state which can be constantly updated because each day new reports are released. In our project the quarterly cashflow and income statement data were fetched via yfinance and merged into the layoff dataset as feature columns for model training.</p>
-        
-        <h3>Financial Feature Extraction &amp; Normalization</h3>
+        <h3>Labeling</h3>
 
-        <p>Raw financial data from yfinance consists of three quarterly statement types per company: balance sheet (assets, liabilities, equity), cash flow statement (operating, investing, financing activities), and income statement (revenue, expenses, profit). Each statement contains dozens of line items. Rather than using raw statement values (which vary dramatically by company size), we extracted normalized numeric features — ratios, per-share metrics, and absolute values standardized where appropriate. This produced 347 total features per company-quarter record, with a consistent schema across all three statement categories.</p>
-
-        <h3>Feature Alignment &amp; Null Handling</h3>
-        <p>Not every company reports every feature in every quarter. Some features appear in one source but not another; others are missing due to data gaps or company-specific reporting choices. Before merging the layoff and no-layoff pools, we aligned both datasets to the union of all observed features. Any missing value was coded as NaN (not a number), allowing downstream models to either impute or ignore sparse features. This ensures the combined dataset has a uniform feature matrix, avoiding silent misalignments.</p>
-
-        <h3>Two-Pool Merging Strategy</h3>
-        <p>The dataset combines two conceptually distinct sources: a <strong>layoff-tracked pool</strong> (12,047 records from 1,941 companies with confirmed layoff events) and a <strong>confirmed no-layoff pool</strong> (17,983 records from 3,442 companies with no documented layoffs). Before merging, we identified 2 tickers present in both pools (STNE, TEAD). Since these companies appeared in the layoff records, we retained their records from the layoff pool and dropped their no-layoff counterparts to maintain label consistency. The final merged dataset contains 30,018 records from 5,381 distinct companies, with the source pool retained as metadata for traceability.</p>
-
-        <h3>Labeling: Two Complementary Schemes</h3>
         <p>The dataset supports two different modeling objectives, each with its own labeling logic:</p>
 
-        <div class="two-col">
-          <div class="card">
-            <h4>Quarter-Level Labeling</h4>
-            <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 filing will label:</p>
-            <ul style="font-size: 0.9em; margin: 0.5rem 0;">
-              <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
-              <li><code>layoff_next_quarter = 1</code> for the Q1 2024 row (enabling prediction of imminent events)</li>
-              <li><code>layoff = 1</code> for both rows (binary classification)</li>
-            </ul>
-            <p><strong>Use case:</strong> Predicting whether a company will announce layoffs in the next quarter based on current financial health. Result: 1,205 positive cases, 28,813 negative cases.</p>
-          </div>
+        <h4>Quarter-Level Labeling</h4>
 
-        <h3>Labeling</h3>
-        <p>Each record was assigned a binary label (0 = no layoff, 1 = layoff event occurred) based on presence in the source datasets.</p>
+        <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 (as an example) filing will label:</p>
+        <ul style="font-size: 0.9em; margin: 0.5rem 0;">
+          <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
+          <li><code>layoff_next_quarter = 1</code> for the Q1 2024 row (enabling prediction of imminent events)</li>
+          <li><code>layoff = 1</code> for both rows (binary classification)</li>
+        </ul>
 
-          <div class="card">
-            <h4>Company-Level Labeling</h4>
-            <p>All quarterly records for a given company receive the same label, regardless of when the layoff occurred:</p>
-            <ul style="font-size: 0.9em; margin: 0.5rem 0;">
-              <li><code>layoff = 1</code> for all rows from companies with any documented layoff</li>
-              <li><code>layoff = 0</code> for all rows from confirmed no-layoff companies</li>
-            </ul>
-            <p><strong>Use case:</strong> Classifying whether a company belongs to the layoff-prone cohort, independent of specific timing. Result: 12,047 positive cases, 17,971 negative cases.</p>
-          </div>
-        </div>
+        <h4>Company-Level Labeling</h4>
+
+        <p>All quarterly records for a given company receive the same label, regardless of when the layoff occurred:</p>
+        <ul style="font-size: 0.9em; margin: 0.5rem 0;">
+          <li><code>layoff = 1</code> for all rows from companies with any documented layoff</li>
+          <li><code>layoff = 0</code> for all rows from confirmed no-layoff companies</li>
+        </ul>
 
         <p>Both schemes preserve the <code>source_pool</code> column, enabling auditing of any prediction back to its origin (layoff-tracked or confirmed no-layoff).</p>
 
-        <h3>Data Integrity Checks</h3>
+        <h4>Data Integrity Checks</h4>
+
         <p>After merging, the combined dataset was validated to ensure:</p>
         <ul>
           <li>No duplicate (company, date) pairs exist within the merged dataset</li>
@@ -392,7 +395,6 @@
         </ul>
         <p>These checks confirm that downstream models receive clean, unambiguous training data.</p>
 
-
         <ul>
           <li><p><strong>Ticker:</strong> A short alphabetic code identifying a publicly-traded company (e.g., ADS = Adidas)</p></li>
           <li><p><strong>Financial Statement:</strong> Quarterly report of company revenue, expenses, assets, and liabilities</p></li>
@@ -400,8 +402,6 @@
         </ul>
           
         <p>All data processing steps can also be visualized as a flowchart.</p>
-
-        <p>For more details, please refer to the source code available at: <strong>[path]</strong></p>
 
         <pre class="mermaid">
           graph TD
@@ -522,6 +522,9 @@
             FINAL_GEN --> RESULT
         </pre>
 
+        <p>
+            Upon completion of this step, the data is transformed into the desired format and is ready for further analysis.
+        </p>
       </div>
       
     </section>
