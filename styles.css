@@ -1,13 +1,13 @@
 :root{
-  --ink:#12151a;
-  --ink-soft:#1b1f26;
-  --paper:#ede8dc;
-  --paper-line:#d8d0bd;
-  --redact:#a63a34;
-  --signal:#4f7a78;
-  --graphite:#9aa0a8;
+  --ink:#181d29;
+  --ink-soft:#232937;
+  --paper:#f7f2e6;
+  --paper-line:#ddd3ba;
+  --redact:#e6483f;
+  --signal:#3d8fd6;
+  --graphite:#a9b0bc;
   --ink-text:#1c2024;
-  --gold:#c9a227;
+  --gold:#e8bc3f;
 }
 
 *{box-sizing:border-box;}
@@ -45,7 +45,7 @@ nav.board{
   top:0;
   height:100vh;
   padding:48px 24px 24px 24px;
-  border-right:1px solid #262b33;
+  border-right:1px solid #2e3546;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
@@ -65,9 +65,9 @@ nav.board{
 .pin-item a{
   text-decoration:none;
   display:block;
-  background:#000;
+  background:#0e1119;
   color:var(--redact);
-  border:1px solid #2a1613;
+  border:1px solid #3a1a17;
   padding:14px 16px;
   font-size:13px;
   transition:background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -79,16 +79,16 @@ nav.board{
   font-family:"Courier New",monospace;
   font-size:10px;
   display:block;
-  color:#7a2b26;
+  color:#a83a32;
   margin-bottom:4px;
   letter-spacing:0.14em;
 }
 .pin-item.active a{
   background:var(--redact);
-  color:#000;
+  color:#1c0b0a;
   border-color:var(--redact);
 }
-.pin-item.active a .num{ color:#3a0d0a; }
+.pin-item.active a .num{ color:#4a1512; }
 
 /* ---------- sub-navigation ---------- */
 .sub-links{
@@ -108,9 +108,9 @@ nav.board{
   font-family:"Courier New",Courier,monospace;
   font-size:11px;
   letter-spacing:0.04em;
-  color:#6a6f76;
+  color:#7a8290;
   padding:7px 16px;
-  border-left:1px solid #2a1613;
+  border-left:1px solid #3a1a17;
   position:relative;
   transition:color 0.15s ease, border-color 0.15s ease;
 }
@@ -151,8 +151,8 @@ section{
   position:absolute;
   inset:0;
   background:
-    radial-gradient(ellipse at 15% 20%, rgba(166,58,52,0.10), transparent 45%),
-    radial-gradient(ellipse at 85% 80%, rgba(79,122,120,0.10), transparent 45%);
+    radial-gradient(ellipse at 15% 20%, rgba(230,72,63,0.14), transparent 45%),
+    radial-gradient(ellipse at 85% 80%, rgba(61,143,214,0.14), transparent 45%);
   pointer-events:none;
 }
 .classification{
@@ -381,7 +381,7 @@ footer .status{
     background:var(--ink);
     z-index:20;
     border-right:none;
-    border-bottom:1px solid #262b33;
+    border-bottom:1px solid #2e3546;
   }
   .board-top{ flex-direction:row; gap:10px; }
   .board-mark, .board-bottom{ display:none; }
