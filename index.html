@@ -652,7 +652,10 @@
         <p> We are able to predict a companies likelihood of having layoffs with 97% accuracy. Accuracy in this context is represented by the ROC- AUC which depicts true positive + true negative / total possible outcomes. Below is an image showcasing ROC- AUC accuracy based on the top performing model; <strong>XGBoost</strong>. For a more detailed view on how we got to choosing this model, please refer to the analysis section.</p> 
         <img src="images/findings/XGBoostTestSetPredictions.png" alt="Results All" />
         <p> This image is a represenative depction of the XGBoost models accuracy. Every point is a company in a given time period with their respective predictions. The X-axis represents the trained models predictions, while the Y-axis is representative of the actual outcomes from the collected data. Following the resulting 97% accuracy of the XGBoost model, the image demonstrates the majority of the model's prediction aligns with the actual outcome true positive true negative (add actual values). This means only 3% of the outcomes were false positives or false negatives.</p>
-        <p> Bora to add secondary confusion matrix for more context to models performance accueracy PLUS time permitting top 10 feature overview</p>
+        <br>
+        <p> The top 10 features for the XGBoost model are shown below:</p>
+        <img src="images/findings/toptenfeaturesxgboost.png" alt="Results All" />
+        <p> As can be seen, most features are presence indicators, since the absence of certain information can itself provide valuable insight.  </p>
         <!-- <p class="placeholder">Here we will explai this image</p> -->
       </div>
 
@@ -662,12 +665,16 @@
         <h2> No, not reliably with the data available </h2>
         <!-- add equation for ROC-AUC time permitting-->
         <p> 
-          There were approximately 20 companies without a record of layoff for every company with a record of layoff. This means that the dataset was highly imbalanced, which made it difficult for the model to learn the patterns associated with layoffs. The model was able to achieve a ROC-AUC of 0.87, but the precision and recall were low, which means that the model was not able to accurately predict layoffs in a 3-6 month timeframe.
-        
+          There were approximately 20 companies without a record of layoff for every company with a record of layoff. 
+          This means that the dataset was highly imbalanced, which made it difficult for the model to learn the patterns associated with layoffs. 
+          Our best performing model, Random Forest, achieved a ROC-AUC of 0.87, but the precision and recall on the layoff class were only 0.41 and 0.28. meaning that
+          approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. This is not a reliable enough prediction to be useful in practice.
         </p> 
-       <br>
-        <p> Bora to add secondary confusion matrix for more context to models performance accueracy PLUS time permitting top 10 feature overview</p>
+        <br>
          <img src="" alt="Results All" />
+         <p> Therefore the results suggest that layoffs cannot be reliably predicted in a 3-6 month timeframe with the available data.</p>
+
+
         <!-- <p class="placeholder">Here we will explain this image</p> -->
       </div>      
 
