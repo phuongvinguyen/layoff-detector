@@ -109,16 +109,10 @@ nav.board{
   font-size:11px;
   letter-spacing:0.04em;
   color:#6a6f76;
-  padding:7px 16px 7px 26px;
+  padding:7px 16px;
   border-left:1px solid #2a1613;
   position:relative;
   transition:color 0.15s ease, border-color 0.15s ease;
-}
-.sub-links a::before{
-  content:"—";
-  position:absolute;
-  left:12px;
-  color:#3a3f46;
 }
 .sub-links a:hover{
   color:var(--paper);
@@ -127,7 +121,6 @@ nav.board{
   color:var(--paper);
   border-left-color:var(--redact);
 }
-.sub-links a.active::before{ color:var(--redact); }
 
 .board-bottom{
   font-size:10px;
