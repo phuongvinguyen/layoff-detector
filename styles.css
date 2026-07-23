@@ -97,7 +97,8 @@ nav.board{
   opacity:0;
   transition:max-height 0.3s ease, opacity 0.2s ease;
 }
-.pin-item.active .sub-links{
+.pin-item.active .sub-links,
+.pin-item:hover .sub-links{
   max-height:120px;
   opacity:1;
 }
@@ -108,14 +109,16 @@ nav.board{
   font-family:"Courier New",Courier,monospace;
   font-size:11px;
   letter-spacing:0.04em;
-  color:#6a6f76;
+  color:var(--graphite);
   padding:7px 16px;
   border-left:1px solid #2a1613;
   position:relative;
-  transition:color 0.15s ease, border-color 0.15s ease;
+  transition:color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 .sub-links a:hover{
-  color:var(--paper);
+  color:var(--redact);
+  border-left-color:var(--redact);
+  background:rgba(255,255,255,0.05);
 }
 .sub-links a.active{
   color:var(--paper);

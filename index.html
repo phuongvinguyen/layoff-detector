@@ -566,11 +566,23 @@
           the absence of financial data itself may contain helpful information. Moreover, the features no variance are dropped,
           and stadardization is applied to ensure that all features contribute equally to the model's learning process.</p>
 
-          <p style="margin-top:14px;">Model performance is evaluated using stratified 5-fold cross-validation together with a held-out test set. [SF: PLS EXPLAIN WHAT THAT MEANS] 
-            Because layoffs represent only about 4% of the observations, both ROC-AUC and Precision-Recall AUC are reported to provide a more
-            informative evaluation for highly imbalanced classification problem.
+          <p style="margin-top:14px;">Model performance is evaluated using stratified 5-fold cross-validation together with a held-out test set. 
+            The dataset is first divided into training and test sets, with the test set kept serparate and used only for the final evaluation.
+            This ensures that the reported performance metrics reflect the model's ability to generalize to previously unseen data.
+            The training set is then split into five stratified folds. During cross-validation, the model is trained on four folds and 
+            validated on the remaining fold, and this process is repeated five times until each fold has served as the validation set once.
+            The performance metrics are averaged across the five iterations, providing a more robust estimate than a single train-validation split.
+            Stratification preserves the original class layoff-to-non-layoff ratio in each fold, which is particularly important because layoffs account for
+            only about 4% of the observations.
+
           </p>
-          
+
+         <p style="margin-top:14px;">
+          Given this class imbalance, model performance is accessed using both the ROC-AUC and Precision-Recall AUC metrics.
+          While ROC-AUC provides an overall measure of the model's ability to discriminate between the classes, 
+          PR-AUC is more informative in imbalanced settings, as it focuses on the model's performance in predicting the minority class (layoffs).
+    
+        </p>
         <p style="margin-top:14px;">
           To prevent data leakage, all variables related to the target label, including the company's name, tickers, and any other identifiers, are excluded 
           fromt he feature set before training. In addition, the classification threshold is optimized using the F-beta score with beta=0.5, 
@@ -582,33 +594,34 @@
       <div class="card" id="analysis-results">
         <span class="tag">Execution &amp; Interpretation</span>
         <h3>Results, with appropriate skepticism</h3>
-        <p>Our first pass, on a small hand-assembled sample (861 rows), returned suspiciously perfect scores &mdash; ROC-AUC of 1.00 for Random Forest, XGBoost, and Gradient Boosting. 
-          
-          We traced this to a bug, not a discovery: the "no layoff" rows were synthetic negatives resampled from a single duplicated company profile, so the models had learned to recognize that one company rather than any real layoff signal. 
-          We're flagging it here rather than quietly dropping it, because it's the kind of mistake worth being visibly honest about.</p>
-          <figure class="img-md">
-            <img src="images/analysis/model_comparison.png" alt="Results Bug" />
-            <figcaption>Model comparison on the 861-row sample, every tree-based model hits ROC-AUC 1.00, the tell that something upstream was broken.</figcaption>
-          </figure>
-          <figure class="img-md">
-            <img src="images/analysis/model_comparison_bug.png" alt="Results Bug" />
-            <figcaption>Model performance summary on the first try</figcaption>
-          </figure>
-        <p style="margin-top:14px;">Once we rebuilt the negative class from real company-quarters and scaled to the full dataset (~30,000 company-quarters across 5,381 companies), 
-          <strong>RQ1</strong> held up: XGBoost reached test ROC-AUC <strong>0.975</strong> (accuracy 0.92, precision 0.91 / recall 0.89 on the layoff class). The strongest features were liquidity and leverage signals — net income from continuing operations, payables &amp; accrued expenses, current liabilities, accounts receivable, total capitalization &mdash;
-           which lines up with financial intuition rather than looking like an artifact.</p>
+       
+        <p style="margin-top:14px;"><strong>RQ1:</strong>
+           For the first research question with approximately 30,000 company-quarters across 5,381 companies, held up under scrutiny. 
+           XGBoost reached a test ROC-AUC of <strong>0.975</strong> (accuracy 0.92, precision 0.91 / recall 0.89 on the layoff class),
+            and the features driving that performance &mdash; liquidity and leverage signals such as net income from continuing operations, payables &amp; accrued expenses, current liabilities, accounts receivable, and total capitalization &mdash; line up with financial intuition rather than looking like an artifact of the pipeline.</p>
             <figure class="img-md">
             <img src="images/analysis/model_comparison_all.png" alt="Results All" />
             <figcaption>Model comparison on the full dataset &mdash; XGBoost achieves the highest ROC-AUC.</figcaption>
           </figure>
           <figure class="img-md">
-            <img src="images/analysis/model_performance_all.png" alt="Results All" />
-            <figcaption>Model performance on the full dataset</figcaption>
+            <img src="images/analysis/model_performance_all.png" alt="Model Performance" />
+            <figcaption>Model performance on the full dataset.</figcaption>
           </figure>
-        <p style="margin-top:14px;"><strong>RQ2</strong> — predicting a layoff in the same or next quarter, the framing that would actually let someone act early — is a much harder problem. 
-          Because true positives are only ~4% of rows, accuracy is a misleading headline number (~0.95, driven almost entirely by the majority class). Our best model here, Random Forest, reached test ROC-AUC 0.87, but precision and recall on the layoff class itself were only 0.41 and 0.28 (F1 0.33) before threshold tuning.</p>
-        <p style="margin-top:14px;">Read plainly: financial fundamentals carry a real, learnable signal for "does this company's profile resemble one that has layoffs" — but we cannot yet reliably answer "will it happen in the next one to two quarters" from public financials alone. Many real layoff triggers (leadership decisions, M&amp;A, strategic pivots) simply aren't visible in balance-sheet numbers months in advance. Our latest pipeline iteration deliberately trades recall for precision via threshold tuning, on the view that a confident false alarm damages trust more than a missed one — but that run currently fails before producing metrics: the imputer is fed a raw ticker column and errors out trying to average a string. Until that's fixed, the untuned RQ2 numbers above are the ones to trust.</p>
-         <p> SF: it would be nice to explain the top 10 features of XGBoost here</p> 
+        <p style="margin-top:14px;"><strong>RQ2</strong> is the harder and more useful question: will a layoff be announced in the same or next quarter, the framing that would actually let someone act early. 
+          Because true positives are only ~4% of rows, accuracy is a misleading headline number here (~0.95, driven almost entirely by the majority class). 
+          Our best model, Random Forest, reached a test ROC-AUC of 0.87, but precision and recall on the layoff class itself were only 0.41 and 0.28 (F1 0.33) before threshold tuning &mdash; a much weaker result than the topline ROC-AUC suggests.</p>
+        <p style="margin-top:14px;">Read plainly: financial fundamentals carry a real, learnable signal for "does this company's profile resemble one that has had layoffs" &mdash; but we can't yet reliably answer "will it happen in the next one to two quarters" from public financials alone. 
+          Many real layoff triggers &mdash; leadership decisions, M&amp;A, strategic pivots &mdash; simply aren't visible in balance-sheet numbers months in advance. 
+          Our latest pipeline iteration tries to trade recall for precision via threshold tuning, on the view that a confident false alarm damages trust more than a missed one, but that run currently fails before producing metrics: the imputer is fed a raw ticker column and errors out trying to average a string.
+          Until that's fixed, the untuned RQ2 numbers above are the ones to trust.
+          Our model also shows that the most important features for predicting layoffs are related to liquidity
+          and leverage, which align with financial intuition. The top 30 most important features for the Random Forest model are shown in the figure below.
+        </p>
+          <figure class="img-md">
+            <img src="images/analysis/important_features.png" alt="Most important features" />
+            <figcaption>Top 30 most important features for the Random Forest model.</figcaption>
+          </figure>
+         <p> SF: it would be nice to explain the top 10 features of XGBoost here</p>
       </div>
     </section>
 
