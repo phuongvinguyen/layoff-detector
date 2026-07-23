@@ -230,13 +230,10 @@
 
       <div class="card" id="data-wrangling">
         <span class="tag">Wrangling</span>
-        <h3>Cleaning &amp; shaping</h3>
-        <p>Raw data arrived in three different date formats (DD.MM.YYYY, DD/MM/YYYY, MM/DD/YYYY) with inconsistent company naming conventions. We normalized all dates to ISO 8601 (YYYY-MM-DD), uppercased company names for matching, removed duplicate records (retaining WARN data as authoritative), deduplicated via string similarity matching, dropped companies without valid tickers, and merged financial features from quarterly cashflow and income statement data. Each layoff event was labeled 0 or 1 for prediction tasks.</p>
-        
         <br>
         <h3>Data Pipeline</h3>
         
-        <p>Our processing follows a structured sequence across ingestion, cleaning, and feature engineering stages:</p>
+        <p>Based on the collected data, the data processing workflow follows a structured sequence consisting of data cleaning and feature engineering stages.</p>
         
         <pre class="mermaid">
           graph LR
@@ -259,53 +256,61 @@
           DEDUP --> MATCH
           
           subgraph FEAT["Feature Engineering"]
-            FILTER["Drop missing<br/>tickers"]
-            VALID["Remove conflicting<br/>tickers"]
-            FETCH["Fetch financial data<br/>via yfinance"]
-            MERGE["Merge quarterly<br/>features"]
-            LABEL["Label layoff<br/>event 0/1"]
-            
-            FILTER --> VALID --> FETCH --> MERGE --> LABEL
+          FILTER["Drop missing<br/>tickers"]
+          VALID["Remove conflicting<br/>tickers"]
+          FETCH["Fetch financial data<br/>via yfinance"]
+          MERGE["Merge quarterly<br/>features"]
+          LABEL["Label layoff<br/>event 0/1"]
+          
+          FILTER --> VALID --> FETCH --> MERGE --> LABEL
           end
           
           MATCH --> FILTER
         </pre>
+
+        <h3>Cleaning</h3>
+        <p>Raw data arrived in three different date formats (DD.MM.YYYY, DD/MM/YYYY, MM/DD/YYYY) with inconsistent company naming conventions. We normalized all dates to ISO 8601 (YYYY-MM-DD), uppercased company names for matching, removed duplicate records (retaining WARN data as authoritative), deduplicated via string similarity matching, dropped companies without valid tickers, and merged financial features from quarterly cashflow and income statement data. Each layoff event was labeled 0 or 1 for prediction tasks.</p>
+        
+        <br>
+        <h3>Date Normalization</h3>
+        <p>The three source files used inconsistent date formats, preventing proper temporal sorting and comparison. All dates were standardized to ISO 8601 (YYYY-MM-DD).</p>
+        <img src="images/data-collection/date_formats.png" alt="Date format inconsistencies across sources" />
+        
+        <p>Corresponding result after standardization:</p>
+        
+        <img src="images/data-collection/upper_case_company.png" alt="Company name uppercasing step" />
+
+        <p>After merging all datasets, the next step focused on harmonizing company names to ensure consistent identification across data sources.</p>
+        
+        <br>
+        <h3>Company Name Harmonization</h3>
+
+        <p>Company names were converted to uppercase to facilitate matching with ticker symbols. Overlapping records between the FYI and WARN datasets were deduplicated by retaining WARN records (legally mandated filings) and removing duplicate FYI records.</p>
+
+        <p>Regex-based string similarity matching was then used to resolve variations in company naming conventions across the source files, ensuring a unique set of company names before assigning ticker symbols.</p>
+
+        <img src="images/data-collection/cleaned_company_names.png" alt="Cleaned company names after harmonization" />
+
+        <h3>Ticker Assignment and Filtering</h3>
+        <p>Companies without valid NASDAQ tickers were removed. Invalid or shared ticker symbols (where multiple companies claim the same ID) were filtered out to ensure clean one-to-one mapping.</p>
+        
+        <br>
+        <h3>Financial Feature Merging</h3>
+        <p>Quarterly cashflow and income statement data were fetched via yfinance and merged into the layoff dataset as feature columns for model training.</p>
+        <img src="images/data-collection/normalisation_step.png" alt="Data normalization pipeline" />
+        
+        <h3>Labeling</h3>
+        <p>Each record was assigned a binary label (0 = no layoff, 1 = layoff event occurred) based on presence in the source datasets.</p>
+        <img src="images/data-collection/normalisation_sample_result.png" alt="Normalized dataset sample" />
+
+        <ul>
+          <li><p><strong>Ticker:</strong> A short alphabetic code identifying a publicly-traded company (e.g., ADS = Adidas)</p></li>
+          <li><p><strong>Financial Statement:</strong> Quarterly report of company revenue, expenses, assets, and liabilities</p></li>
+          <li><p><strong>Financial Feature:</strong> A derived metric or ratio computed from financial statements for predictive modeling</p></li>
+        </ul>
+
       </div>
-
-      <h2 class="sec-title display">Processing Details</h2>
       
-      <h3>Date Normalization</h3>
-      <p>The three source files used inconsistent date formats, preventing proper temporal sorting and comparison. All dates were standardized to ISO 8601 (YYYY-MM-DD).</p>
-      <img src="images/data-collection/date_formats.png" alt="Date format inconsistencies across sources" />
-      
-      <h3>Company Name Harmonization</h3>
-      <p>After merging datasets, company names were uppercased to enable matching with ticker symbols. Overlapping records between FYI and WARN sources were deduplicated by retaining WARN records (legally mandated filings) and discarding FYI duplicates.</p>
-      <img src="images/data-collection/upper_case_company.png" alt="Company name uppercasing step" />
-      
-      <h3>String Matching &amp; Deduplication</h3>
-      <p>Regex-based string similarity matching resolved variations in company naming conventions across source files, ensuring a distinct set of companies before ticker assignment.</p>
-      <img src="images/data-collection/cleaned_company_names.png" alt="Cleaned company names with stemming" />
-      
-      <h3>Ticker Assignment &amp; Filtering</h3>
-      <p>Companies without valid NASDAQ tickers were removed. Invalid or shared ticker symbols (where multiple companies claim the same ID) were filtered out to ensure clean one-to-one mapping.</p>
-      
-      <h3>Financial Feature Merging</h3>
-      <p>Quarterly cashflow and income statement data were fetched via yfinance and merged into the layoff dataset as feature columns for model training.</p>
-      <img src="images/data-collection/normalisation_step.png" alt="Data normalization pipeline" />
-      
-      <h3>Labeling</h3>
-      <p>Each record was assigned a binary label (0 = no layoff, 1 = layoff event occurred) based on presence in the source datasets.</p>
-      <img src="images/data-collection/normalisation_sample_result.png" alt="Normalized dataset sample" />
-
-      <h2 class="sec-title display">Key Terms</h2>
-      <ul>
-        <li><strong>Ticker:</strong> A short alphabetic code identifying a publicly-traded company (e.g., ADS = Adidas)</li>
-        <li><strong>Financial Statement:</strong> Quarterly report of company revenue, expenses, assets, and liabilities</li>
-        <li><strong>Financial Feature:</strong> A derived metric or ratio computed from financial statements for predictive modeling</li>
-      </ul>
-
-      <p><strong>For implementation details, refer to the Jupyter notebooks in the project repository.</strong></p>
-
     </section>
 
 
