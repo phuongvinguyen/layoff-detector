@@ -276,8 +276,11 @@
         <p>The three source files used inconsistent date formats, preventing proper temporal sorting and comparison. All dates were standardized to ISO 8601 (YYYY-MM-DD).</p>
         <img src="images/data-collection/date_formats.png" alt="Date format inconsistencies across sources" />
         
-        <p>Corresponding result after standardization:</p>
-        
+        <p>In addition to standardizing the dates, the column headers across all datasets also needed to be normalized.</p>
+        <img src="images/data-collection/normalisation_sample_result.png" alt="Normalized dataset sample" />
+
+        <p>They result the following:</p>
+
         <img src="images/data-collection/upper_case_company.png" alt="Company name uppercasing step" />
 
         <p>After merging all datasets, the next step focused on harmonizing company names to ensure consistent identification across data sources.</p>
@@ -292,16 +295,25 @@
         <img src="images/data-collection/cleaned_company_names.png" alt="Cleaned company names after harmonization" />
 
         <h3>Ticker Assignment and Filtering</h3>
-        <p>Companies without valid NASDAQ tickers were removed. Invalid or shared ticker symbols (where multiple companies claim the same ID) were filtered out to ensure clean one-to-one mapping.</p>
+
+        <p>Example of the first five rows of the NASDAQ dataset:</p>
+        <img src="images/data-collection/nasdaq_5_rows.png" alt="First five rows of the NASDAQ dataset" />
         
+        <p>Symbols are the Tickers and the Security Names are the companies' name.</p>
+
+        <p>To simplify the analysis, company names were mapped to their corresponding ticker symbols. The ticker information was obtained from the NASDAQ dataset described earlier.</p>
+
+        <img src="images/data-collection/tickers_merged_with_layoffs.png" alt="Tickers merged with layoffs" />
+        <img src="images/data-collection/suspicious_tickers_deleted.png" alt="Invalid or duplicate tickers removed" />
+
+        <p>Companies without a valid NASDAQ ticker were excluded. Invalid or duplicate ticker symbols, where multiple companies were associated with the same ticker, were also removed to ensure a one-to-one mapping between each company and its ticker symbol.</p>
+
         <br>
         <h3>Financial Feature Merging</h3>
         <p>Quarterly cashflow and income statement data were fetched via yfinance and merged into the layoff dataset as feature columns for model training.</p>
-        <img src="images/data-collection/normalisation_step.png" alt="Data normalization pipeline" />
         
         <h3>Labeling</h3>
         <p>Each record was assigned a binary label (0 = no layoff, 1 = layoff event occurred) based on presence in the source datasets.</p>
-        <img src="images/data-collection/normalisation_sample_result.png" alt="Normalized dataset sample" />
 
         <ul>
           <li><p><strong>Ticker:</strong> A short alphabetic code identifying a publicly-traded company (e.g., ADS = Adidas)</p></li>
