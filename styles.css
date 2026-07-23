@@ -99,7 +99,7 @@ nav.board{
 }
 .pin-item.active .sub-links,
 .pin-item:hover .sub-links{
-  max-height:120px;
+  max-height:200px;
   opacity:1;
 }
 .sub-links a{
