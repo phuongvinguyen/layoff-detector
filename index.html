@@ -298,15 +298,18 @@
 
         <p>Example of the first five rows of the NASDAQ dataset:</p>
         <img src="images/data-collection/nasdaq_5_rows.png" alt="First five rows of the NASDAQ dataset" />
-        
-        <p>Symbols are the Tickers and the Security Names are the companies' name.</p>
 
-        <p>To simplify the analysis, company names were mapped to their corresponding ticker symbols. The ticker information was obtained from the NASDAQ dataset described earlier.</p>
+        <p>The <strong>Symbol</strong> column contains the ticker symbols, while the <strong>Security Name</strong> column contains the corresponding company names.</p>
+        
+        <br>
+        <p>To simplify the analysis, company names were mapped to their corresponding ticker symbols. The ticker information was obtained from the NASDAQ dataset described earlier. See below the illustration, a new collumn <Tiker> was added doing the </p>
 
         <img src="images/data-collection/tickers_merged_with_layoffs.png" alt="Tickers merged with layoffs" />
+        
+        <p>Companies without a valid NASDAQ ticker were excluded. Invalid or duplicate ticker symbols, where multiple companies were associated with the same ticker, were also removed to ensure a one-to-one mapping between each company and its ticker symbol.</p>
+        
         <img src="images/data-collection/suspicious_tickers_deleted.png" alt="Invalid or duplicate tickers removed" />
 
-        <p>Companies without a valid NASDAQ ticker were excluded. Invalid or duplicate ticker symbols, where multiple companies were associated with the same ticker, were also removed to ensure a one-to-one mapping between each company and its ticker symbol.</p>
 
         <br>
         <h3>Financial Feature Merging</h3>
@@ -314,6 +317,55 @@
         
         <h3>Labeling</h3>
         <p>Each record was assigned a binary label (0 = no layoff, 1 = layoff event occurred) based on presence in the source datasets.</p>
+
+        <h3>Financial Feature Extraction &amp; Normalization</h3>
+
+        <p>Raw financial data from yfinance consists of three quarterly statement types per company: balance sheet (assets, liabilities, equity), cash flow statement (operating, investing, financing activities), and income statement (revenue, expenses, profit). Each statement contains dozens of line items. Rather than using raw statement values (which vary dramatically by company size), we extracted normalized numeric features — ratios, per-share metrics, and absolute values standardized where appropriate. This produced 347 total features per company-quarter record, with a consistent schema across all three statement categories.</p>
+
+        <h3>Feature Alignment &amp; Null Handling</h3>
+        <p>Not every company reports every feature in every quarter. Some features appear in one source but not another; others are missing due to data gaps or company-specific reporting choices. Before merging the layoff and no-layoff pools, we aligned both datasets to the union of all observed features. Any missing value was coded as NaN (not a number), allowing downstream models to either impute or ignore sparse features. This ensures the combined dataset has a uniform feature matrix, avoiding silent misalignments.</p>
+
+        <h3>Two-Pool Merging Strategy</h3>
+        <p>The dataset combines two conceptually distinct sources: a <strong>layoff-tracked pool</strong> (12,047 records from 1,941 companies with confirmed layoff events) and a <strong>confirmed no-layoff pool</strong> (17,983 records from 3,442 companies with no documented layoffs). Before merging, we identified 2 tickers present in both pools (STNE, TEAD). Since these companies appeared in the layoff records, we retained their records from the layoff pool and dropped their no-layoff counterparts to maintain label consistency. The final merged dataset contains 30,018 records from 5,381 distinct companies, with the source pool retained as metadata for traceability.</p>
+
+        <h3>Labeling: Two Complementary Schemes</h3>
+        <p>The dataset supports two different modeling objectives, each with its own labeling logic:</p>
+
+        <div class="two-col">
+          <div class="card">
+            <h4>Quarter-Level Labeling</h4>
+            <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 filing will label:</p>
+            <ul style="font-size: 0.9em; margin: 0.5rem 0;">
+              <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
+              <li><code>layoff_next_quarter = 1</code> for the Q1 2024 row (enabling prediction of imminent events)</li>
+              <li><code>layoff = 1</code> for both rows (binary classification)</li>
+            </ul>
+            <p><strong>Use case:</strong> Predicting whether a company will announce layoffs in the next quarter based on current financial health. Result: 1,205 positive cases, 28,813 negative cases.</p>
+          </div>
+
+          <div class="card">
+            <h4>Company-Level Labeling</h4>
+            <p>All quarterly records for a given company receive the same label, regardless of when the layoff occurred:</p>
+            <ul style="font-size: 0.9em; margin: 0.5rem 0;">
+              <li><code>layoff = 1</code> for all rows from companies with any documented layoff</li>
+              <li><code>layoff = 0</code> for all rows from confirmed no-layoff companies</li>
+            </ul>
+            <p><strong>Use case:</strong> Classifying whether a company belongs to the layoff-prone cohort, independent of specific timing. Result: 12,047 positive cases, 17,971 negative cases.</p>
+          </div>
+        </div>
+
+        <p>Both schemes preserve the <code>source_pool</code> column, enabling auditing of any prediction back to its origin (layoff-tracked or confirmed no-layoff).</p>
+
+        <h3>Data Integrity Checks</h3>
+        <p>After merging, the combined dataset was validated to ensure:</p>
+        <ul>
+          <li>No duplicate (company, date) pairs exist within the merged dataset</li>
+          <li>All label columns contain only valid values (0 or 1)</li>
+          <li>No ticker overlap remains between the two source pools</li>
+          <li>Feature columns are consistent across all rows</li>
+        </ul>
+        <p>These checks confirm that downstream models receive clean, unambiguous training data.</p>
+
 
         <ul>
           <li><p><strong>Ticker:</strong> A short alphabetic code identifying a publicly-traded company (e.g., ADS = Adidas)</p></li>
