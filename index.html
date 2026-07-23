@@ -178,315 +178,134 @@
         <p class="quote-block placeholder">RQ 2: Assuming we are able to predict layoffs with public available information, can we also predict layoffs in a 3 - 6 month timeframe?</p>
       </div>
     </section>
-    
+
     <!-- ============ 02 DATA ============ -->
     <section id="data">
       <span class="eyebrow mono">02 — DATA COLLECTION &amp; WRANGLING</span>
-      <p class="sec-intro">We followed the standard data pipeline defined in the lecture.</p>
-
+      <h2 class="sec-title display">Where It Came From</h2>
       
-      <pre class="mermaid">
-        graph LR
+      <p class="sec-intro">We integrated data from three primary sources, Layoffs FYI, NASDAQ, and WARN (Worker Adjustment and Retraining Notification) filings, through a multi stage processing pipeline. The pipeline standardized data formats, resolved overlapping and duplicate records, and harmonized company identifiers to create a unified dataset for downstream analysis.</p>
 
-        A["fyi_layoffs.csv - DD.MM.YYYY"]
-        B["WARNDatabase2026.csv - DD/MM/YYYY"]
-        C["WARNDatabaseMasterExcluding2026.csv - MM/DD/YYYY"]
-        NORM["Parse dates, normalize schema and merge into one dataset"]
-
-        A --> NORM
-        B --> NORM
-        C --> NORM
-
-        D["NASDAQ.csv"]
-        FT["Fetch tickers"]
-        D --> FT
-
-        UP["Uppercase company names"]
-        INT["Remove overlap data"]
-
-        NORM --> UP --> INT
-
-        subgraph VERT[" "]
-            direction TB
-            TICK["Remove companies without tickers"]
-            BAD["Filter bad or shared tickers"]
-            FETCH["Fetch data from yfinance"]
-            FIN["Merge financial data - features and quarters"]
-            LABEL["Label layoff 1 or 0"]
-            O1["tickers"]
-            O2["features"]
-            O3["label (0/1)"]
-
-            TICK --> BAD --> FETCH --> FIN --> LABEL
-            LABEL -.-> O1
-            LABEL -.-> O2
-            LABEL -.-> O3
-            LABEL -->|feedback loop| TICK
-        end
-
-        INT --> FT
-        FT --> TICK
-        </pre>
- 
-      <h2 class="sec-title display">Dataset</h2>
-
+      <div class="card" id="data-collection">
+        <span class="tag">Collection</span>
+        <h3>Source &amp; method</h3>
+        
+        <ul>
+          <li><p><strong>Layoffs FYI:</strong> Crowd-sourced global layoff tracker spanning multiple industries.</p></li>
+          <li><p><strong>WARN Data:</strong> US legally-mandated filings for 2026 and historical records through 2025 (accessed via <a href="https://github.com/datasets/nasdaq-listings" target="_blank">GitHub datasets</a> and archive).</p></li>
+          <li><p><strong>NASDAQ:</strong> Ticker listings for company identification.</p></li>
+          <li><p><strong>Raw data:</strong> Obtained via direct CSV downloads and the yfinance library for financial data retrieval.</p></li>
+        </ul>
+        
         <table>
-        <thead>
-            <tr>
+            <caption>Each dataset with its corresponding source link is listed below.</caption>          
+            <thead>
+              <tr>
                 <th>Dataset Name</th>
                 <th>URL</th>
                 <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>Layoffs FYI</strong></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Layoffs FYI</td>
                 <td><a href="https://layoffs.fyi/" target="_blank">https://layoffs.fyi/</a></td>
                 <td>Crowd-sourced tracker (global, many industries)</td>
-            </tr>
-            <tr>
-                <td><strong>WARN Data</strong></td>
+              </tr>
+              <tr>
+                <td>WARN Data</td>
                 <td><a href="https://web.archive.org/web/20260509102542/https://layoffdata.com/data/" target="_blank">https://web.archive.org/web/20260509102542/https://layoffdata.com/data/</a></td>
                 <td>US WARN-act filings for 2026</td>
               </tr>
-            <tr>
-                <td><strong>NASDAQ</strong></td>
+              <tr>
+                <td>NASDAQ</td>
                 <td><a href="https://github.com/datasets/nasdaq-listings" target="_blank">https://github.com/datasets/nasdaq-listings</a></td>
                 <td>US WARN-act filings up to end of 2025</td>
-            </tr>
-        </tbody>
-    </table>
+              </tr>
+          </tbody>
+        </table>
 
-    <img src="images/data-collection/load_data.png" alt="Data Loaded" />
-
-
-      <h2 class="sec-title display">Methods of data Collection</h2>
-
-        <p class="placeholder">Our analysis incorporates data from three primary sources: Layoffs FYI, NASDAQ, and WARN (Worker Adjustment and Retraining Notification) data.</p>
-        
-        <p class="placeholder">NASDAQ and WARN data were obtained via direct CSV downloads and processed using the yfinance library for financial data retrieval. Website content was converted to PDF format for archival purposes.</p>
-        
-        <div class="note">
-            <p><strong>Note on WARN Data Accessibility:</strong> While WARN data from layoffdata.com is currently behind a paywall (USD 2,000), this information remains legally accessible through official state records.</p>
-        </div>
-
-        
-        
-        <h2 class="sec-title display">Data Pipeline</h2>
-        <p class="placeholder">The flowchart above guides you on the main files and stages of our data pipeline. Please check the corresponding files in our codebase for more implementation details.</p>
-
-
-  
-        <pre class="mermaid">
-          flowchart TD
-          subgraph DataRoot["OSINT and DATA Pipeline (layoff detector)"]
-          Z[Direction] --> B[Collection] --> P[Processing] --> A[Analysis] --> E[Dissemination]
-          P -->|feedback loop| B
-          
-          subgraph Order_Collection ["Data Collection Order"]
-          I["pdf_to_csv.ipynb"] --> H["get_finance_data.ipynb"] 
-          end
-          
-          subgraph Order_Processing ["Processing Order"]
-          J["fix_ticker_conflicts_and_relabel.ipynb"] -.-> K["label_layoff.ipynb"]
-          K --> L["generate_layoffs.ipynb"]
-          L --> M["merged_bs_cs_fd.ipynb"]
-          end
-          
-          subgraph Order_Analysis ["Analysis Order"]
-          N["ml_test.ipynb"]
-          end
-          
-          P -.-> J
-          A -.-> N
-          B -.-> I
-          end
-        </pre>
-
-        <h2 class="sec-title display">Data Wrangling (Data Processing)</h2>
-
-      <p class="placeholder">Our analysis focuses on three datasets: <strong>fyi_layoffs.csv</strong> (<strong>DD.MM.YYYY</strong>), <strong>WARNDatabase2026.csv</strong> (<strong>DD/MM/YYYY</strong>), and <strong>WARNDatabaseMasterExcluding2026.csv</strong> (<strong>MM/DD/YYYY</strong>). Due to inconsistent date formatting across sources, we normalize all dates to the <strong>ISO 8601 standard format (YYYY-MM-DD)</strong> to ensure accurate sorting and temporal comparisons.</p>
-      <img src="images/data-collection/date_formats.png" alt="Data formats" />
-      <p class="placeholder">Example of data representation for this step:</p>
-      
-      <p>The next step is to merge all these data. It should look</p>
-
-      <img src="images/data-collection/date_formats.png" alt="Dataset merged" />
-      
-      <p>The next step was data normalization:</p>
-
-      <img src="images/data-collection/normalisation_step.png" alt="Normalisation step" />
-
-      <p>Sample result of the normalisation:</p>
-
-      <img src="images/data-collection/normalisation_sample_result.png" alt="Sample result of the normalization" />
-      
-      After the normalisation step, we capitilized the companies name as illustrated the image bellow:
-            <img src="images/data-collection/upper_case_company.png" alt="Sample result of the normalization" />
-        This will help us to map with the tickers (short companies name) that come from a different source.
-        However, before we move on, because there are a finite amount of companies, name in both files can coincide and we therefore ave to fix such overlaps and consider only the distinct set.
-
-        To avoid double-counting, we remove rows from the FYI source that have overlaps with WARN data. WARN data is more authoritative since companies are required by law to publish it, so we keep the WARN records and discard the FYI duplicates.
-
-
-       Next we do a search witha regex to find similar company names (stemming)
-      <img src="images/data-collection/cleaned_company_names.png" alt="Sample of cleaned company names" />
-
-<p>To make things simpler, we work with tickers instead of company names. Companies without tickers are removed from the dataset. Additionally, we filter out invalid tickers, as different companies may share the same ticker symbol.</p>
-
-<p>Next, we merge all financial data and transform the raw data into meaningful financial features.</p>
-
-<p>In the final step, we label each layoff event as either <strong>0</strong> or <strong>1</strong>, indicating the presence or absence of evidence for a prediction.</p>
-
-<p><strong>NOTE:</strong></p>
-
-<p>Please familiarize yourself with the following key terms:</p>
-
-<ul>
-    <li><strong>Ticker:</strong> A short code identifying a company (e.g., ADS = Adidas)</li>
-    <li><strong>Financial Statement:</strong> A report showing what a company earned, owns, and owes</li>
-    <li><strong>Financial Feature:</strong> A specific condition or characteristic found in a metric used to measure performance</li>
-</ul>
-
-<p>All data processing steps can also be visualized as a flowchart.</p>
-
-<p>For more details, please refer to the source code available at: <strong>[path]</strong></p>
-
-<pre class="mermaid">
-  graph TD
-    subgraph PDF_Extraction ["PDF to CSV Pipeline"]
-        PDF_INPUT[/"data/raw/layoffs.pdf"\]
-        READ_PDF[Read PDF Content]
-        PARSE_PDF[Extract Table Data]
-        SAVE_RAW[Save to folder data/raw]
-        RAW_CSV[("data/raw/fyi_layoffs.csv")]
-    end
-
-    subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
-        CLEAN_START([Start Cleaning])
-        REMOVE_OVERLAP[Remove Overlapping Records]
-        MERGE_NAMES[Merge Similar Company Names]
-        STRING_SIMILARITY[Merge Closely Related Strings]
-        CLEANED_CSV[("cleaned_layoffs.csv")]
-    end
-
-    subgraph Finance_Pipeline ["get_finance_data Pipeline"]
-        SEARCH_TICKERS[Search Tickers via yfinance.Search]
-        DROP_MISSING[Drop Rows without Tickers]
-        TICKERS_CSV[("LAYOFFS_WITH_TICKERS_CSV_PATH")]
-        
-        subgraph Data_Fetch ["Parallel Data Fetching"]
-            FETCH_CASHFLOW[Fetch Quarterly Cashflow]
-            FETCH_FINANCIALS[Fetch Quarterly Financials]
-        end
-        
-        CASHFLOW_STORAGE[("CASHFLOW_DIR/*.csv")]
-        FINANCIAL_STORAGE[("FINANCIAL_DATA_DIR/*.csv")]
-    end
-
-    PDF_INPUT --> READ_PDF
-    READ_PDF --> PARSE_PDF
-    PARSE_PDF --> SAVE_RAW
-    SAVE_RAW --> RAW_CSV
-
-    CLEAN_START --> REMOVE_OVERLAP
-    REMOVE_OVERLAP --> MERGE_NAMES
-    MERGE_NAMES --> STRING_SIMILARITY
-    STRING_SIMILARITY --> CLEANED_CSV
-
-    CLEANED_CSV --> SEARCH_TICKERS
-    SEARCH_TICKERS --> DROP_MISSING
-    DROP_MISSING --> TICKERS_CSV
-    
-    TICKERS_CSV --> FETCH_CASHFLOW
-    TICKERS_CSV --> FETCH_FINANCIALS
-    
-    FETCH_CASHFLOW --> CASHFLOW_STORAGE
-    FETCH_FINANCIALS --> FINANCIAL_STORAGE
-    
-    subgraph Main_Project ["Project: layoff-detector (root)"]
-        START([start_point: generate_layoff])
-    end
-
-    subgraph PDF_Extraction ["PDF to CSV Pipeline"]
-        PDF_INPUT[/"data/raw/layoffs.pdf"\]
-        READ_PDF[Read PDF Content]
-        PARSE_PDF[Extract Table Data]
-        SAVE_RAW[Save to folder data/raw]
-        RAW_CSV[("data/raw/fyi_layoffs.csv")]
-    end
-
-    subgraph Data_Ingestion ["Data Ingestion"]
-        FILE_A[(File fyi_layoffs.csv)]
-        FILE_B[(File WARNDatabase2026.csv)]
-        FILE_C[(File WARNDatabaseMasterExcluding2026_.csv)]
-        
-        CONV_LIST[Convert to List]
-        SHOW_DATA[Display Data]
-        PARSE_FORMAT[Parse Format]
-    end
-
-    subgraph Preprocessing ["Data Preprocessing"]
-        DATE_TRANSFORM[Transform Date: DD.MM.Y to YY.MM.DD]
-        NORMALIZE[Normalize Data]
-        JOIN_FILES[Join into Single File]
-    end
-
-    subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
-        REMOVE_OVERLAP[Remove Overlapping Records]
-        MERGE_NAMES[Merge Similar Company Names]
-        STRING_SIMILARITY[Merge Closely Related Strings]
-    end
-
-    subgraph Output ["Final Output"]
-        FINAL_GEN[Generate Final File]
-        RESULT[(final_layoffs.csv)]
-    end
-
-    PDF_INPUT --> READ_PDF
-    READ_PDF --> PARSE_PDF
-    PARSE_PDF --> SAVE_RAW
-    SAVE_RAW --> RAW_CSV
-
-    RAW_CSV --> FILE_A
-    START --> FILE_B
-    START --> FILE_C
-
-    FILE_A --> CONV_LIST
-    FILE_B --> CONV_LIST
-    FILE_C --> CONV_LIST
-
-    CONV_LIST --> SHOW_DATA
-    SHOW_DATA --> PARSE_FORMAT
-    
-    PARSE_FORMAT --> DATE_TRANSFORM
-    DATE_TRANSFORM --> NORMALIZE
-    NORMALIZE --> JOIN_FILES
-
-    JOIN_FILES --> REMOVE_OVERLAP
-    REMOVE_OVERLAP --> MERGE_NAMES
-    MERGE_NAMES --> STRING_SIMILARITY
-    
-    STRING_SIMILARITY --> FINAL_GEN
-    FINAL_GEN --> RESULT
-</pre>
-
-        <h2 class="sec-title display">Where It Came From</h2>
-        
-        <p class="sec-intro">Every dataset has a story. Tell it at a high level — no list of dataframe calls — and be upfront about anything (like API limits) that constrained you.</p>
-        
-        <div class="two-col">
-          <div class="card" id="data-collection">
-            <span class="tag">Collection</span>
-            <h3>Source &amp; method</h3>
-          <p class="placeholder">[Where did the data come from? Why does it fit the question? Mention scope, time range, and any access constraints — flag anything like API changes that limited what you could gather.]</p>
-        </div>
-        <div class="card" id="data-wrangling">
-          <span class="tag">Wrangling</span>
-          <h3>Cleaning &amp; shaping</h3>
-          <p class="placeholder">[What state was the raw data in, and what did you do to it? Explain decisions that could affect the results — dedup, filtering, missing data handling — so a reader trusts what follows.]</p>
-        </div>
+        <p class="quote-block placeholder"><strong>Access note:</strong> WARN data from layoffdata.com is paywalled (USD 2,000), but equivalent information is legally accessible through official state records.</p>
       </div>
+
+      <div class="card" id="data-wrangling">
+        <span class="tag">Wrangling</span>
+        <h3>Cleaning &amp; shaping</h3>
+        <p>Raw data arrived in three different date formats (DD.MM.YYYY, DD/MM/YYYY, MM/DD/YYYY) with inconsistent company naming conventions. We normalized all dates to ISO 8601 (YYYY-MM-DD), uppercased company names for matching, removed duplicate records (retaining WARN data as authoritative), deduplicated via string similarity matching, dropped companies without valid tickers, and merged financial features from quarterly cashflow and income statement data. Each layoff event was labeled 0 or 1 for prediction tasks.</p>
+        
+        <br>
+        <h3>Data Pipeline</h3>
+        
+        <p>Our processing follows a structured sequence across ingestion, cleaning, and feature engineering stages:</p>
+        
+        <pre class="mermaid">
+          graph LR
+          A["fyi_layoffs.csv<br/>DD.MM.YYYY"]
+          B["WARNDatabase2026.csv<br/>DD/MM/YYYY"]
+          C["WARNDatabaseMaster<br/>MM/DD/YYYY"]
+          NORM["Normalize dates to<br/>ISO 8601 &amp; merge"]
+          
+          A --> NORM
+          B --> NORM
+          C --> NORM
+          
+          D["NASDAQ.csv<br/>Tickers"]
+          UPPER["Uppercase company<br/>names"]
+          DEDUP["Remove overlaps<br/>(prioritize WARN)"]
+          MATCH["Match to tickers<br/>(regex stemming)"]
+          
+          NORM --> UPPER --> DEDUP
+          D --> MATCH
+          DEDUP --> MATCH
+          
+          subgraph FEAT["Feature Engineering"]
+            FILTER["Drop missing<br/>tickers"]
+            VALID["Remove conflicting<br/>tickers"]
+            FETCH["Fetch financial data<br/>via yfinance"]
+            MERGE["Merge quarterly<br/>features"]
+            LABEL["Label layoff<br/>event 0/1"]
+            
+            FILTER --> VALID --> FETCH --> MERGE --> LABEL
+          end
+          
+          MATCH --> FILTER
+        </pre>
+      </div>
+
+      <h2 class="sec-title display">Processing Details</h2>
+      
+      <h3>Date Normalization</h3>
+      <p>The three source files used inconsistent date formats, preventing proper temporal sorting and comparison. All dates were standardized to ISO 8601 (YYYY-MM-DD).</p>
+      <img src="images/data-collection/date_formats.png" alt="Date format inconsistencies across sources" />
+      
+      <h3>Company Name Harmonization</h3>
+      <p>After merging datasets, company names were uppercased to enable matching with ticker symbols. Overlapping records between FYI and WARN sources were deduplicated by retaining WARN records (legally mandated filings) and discarding FYI duplicates.</p>
+      <img src="images/data-collection/upper_case_company.png" alt="Company name uppercasing step" />
+      
+      <h3>String Matching &amp; Deduplication</h3>
+      <p>Regex-based string similarity matching resolved variations in company naming conventions across source files, ensuring a distinct set of companies before ticker assignment.</p>
+      <img src="images/data-collection/cleaned_company_names.png" alt="Cleaned company names with stemming" />
+      
+      <h3>Ticker Assignment &amp; Filtering</h3>
+      <p>Companies without valid NASDAQ tickers were removed. Invalid or shared ticker symbols (where multiple companies claim the same ID) were filtered out to ensure clean one-to-one mapping.</p>
+      
+      <h3>Financial Feature Merging</h3>
+      <p>Quarterly cashflow and income statement data were fetched via yfinance and merged into the layoff dataset as feature columns for model training.</p>
+      <img src="images/data-collection/normalisation_step.png" alt="Data normalization pipeline" />
+      
+      <h3>Labeling</h3>
+      <p>Each record was assigned a binary label (0 = no layoff, 1 = layoff event occurred) based on presence in the source datasets.</p>
+      <img src="images/data-collection/normalisation_sample_result.png" alt="Normalized dataset sample" />
+
+      <h2 class="sec-title display">Key Terms</h2>
+      <ul>
+        <li><strong>Ticker:</strong> A short alphabetic code identifying a publicly-traded company (e.g., ADS = Adidas)</li>
+        <li><strong>Financial Statement:</strong> Quarterly report of company revenue, expenses, assets, and liabilities</li>
+        <li><strong>Financial Feature:</strong> A derived metric or ratio computed from financial statements for predictive modeling</li>
+      </ul>
+
+      <p><strong>For implementation details, refer to the Jupyter notebooks in the project repository.</strong></p>
+
     </section>
 
 

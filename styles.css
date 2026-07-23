@@ -303,6 +303,54 @@ h2.sec-title{
     margin-top: 16px;
 }
 
+/* --------- collection table ------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  table-layout: fixed;
+  background-color: #fffbf0; /* Warm cream instead of pure white */
+}
+
+th, td {
+  padding: 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #e8dcc8;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+th {
+  font-weight: 600;
+  background-color: #fff5e6; /* Slightly warmer header */
+  border-bottom: 2px solid #d4a574;
+  color: #333;
+}
+
+td {
+  color: #555;
+  vertical-align: top;
+  background-color: #fffbf0;
+}
+
+td:first-child {
+  font-weight: 600;
+  color: #222;
+}
+
+a {
+  color: #0066cc;
+  word-break: break-all;
+}
+
+tbody tr:hover {
+  background-color: #fff8ed;
+}
+
+tbody tr:last-child td {
+  border-bottom: 2px solid #d4a574;
+}
+
 /* ---------- ethics stamp ---------- */
 .stamp{
   display:inline-flex;
