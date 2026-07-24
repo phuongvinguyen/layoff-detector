@@ -362,6 +362,7 @@
 
         <h4>Quarter-Level Labeling</h4>
 
+        
         <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 (as an example) filing will label:</p>
         <ul style="font-size: 0.9em; margin: 0.5rem 0;">
           <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
@@ -369,15 +370,19 @@
           <li><code>layoff = 1</code> for both rows (binary classification)</li>
         </ul>
 
+        <img src="images/data-collection/sample_layoff_quarter.png" alt="Sample quarters" />
+        
         <h4>Company-Level Labeling</h4>
-
+        
         <p>All quarterly records for a given company receive the same label, regardless of when the layoff occurred:</p>
         <ul style="font-size: 0.9em; margin: 0.5rem 0;">
           <li><code>layoff = 1</code> for all rows from companies with any documented layoff</li>
           <li><code>layoff = 0</code> for all rows from confirmed no-layoff companies</li>
         </ul>
-
+        
         <p>Both schemes preserve the <code>source_pool</code> column, enabling auditing of any prediction back to its origin (layoff-tracked or confirmed no-layoff).</p>
+
+        <img src="images/data-collection/sample_layoff_all.png" alt="Sample all companies" />
 
         <h4>Data Integrity Checks</h4>
 
