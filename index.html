@@ -381,7 +381,7 @@
         <ul style="font-size: 0.9em; margin: 0.5rem 0;">
           <li><code>layoff_this_quarter = 1</code> for the Q1 2024 row</li>
           <li><code>layoff_next_quarter = 1</code> for the Q2 2024 row (enabling prediction of imminent events)</li>
-          <li><code>layoff = layoff_this_quarter || layoff_next_quarter, where || represent OR operation.</li>
+          <li><code>layoff = layoff_this_quarter || layoff_next_quarter, where || represent OR operation.</code></li>
         </ul>
 
         <img src="images/data-collection/sample_layoff_quarter.png" alt="Sample quarters" />
@@ -736,14 +736,6 @@
           <span class="tag">Limitations</span>
           <h3>Scope of the Project</h3>
           <!-- <p class="placeholder"> limitations do we have? </p> -->
-<<<<<<< Updated upstream
-
-          <p > We exclusively used publicly available company level financial data from yfinance, WARN and layoffs.fyi to train our models. We did not collect or use any
-            employee-level data, sensitive information, or personally identifiable information.
-            Low probability, but could happen. Companies with the same name can be resulting in the same ticker. A ticker is defined as the financial info from yFinance, this is explained in detail in the data wrangling section (link to the section)
-            May happen; likely... Might lose companies when uppercasing naming. Capitili 
-            Larger limitation; trusted data from WARN and fyi and NASDAQ. We believe info from yfinance is correct as well however  
-=======
           
           <span class="chip">Assumptions</span>
           <br>
@@ -770,7 +762,6 @@
             <br>
             <br>
             Furthermore, there is a low probability that companies with similar names may be merged into one when uppercasing company naming for data normalization. For example, two entries of "amazon" and "Amazon" would be merged into one, which isn't a big issue since it's the same company. However, if there was a small company "abc" and a well-known company "ABC", they merge into "ABC", thus we lost the smaller company.
->>>>>>> Stashed changes
           </p>
       </div>
       
