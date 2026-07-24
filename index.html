@@ -94,7 +94,7 @@
       <h1 class="title display">Layoff Detector</h1>
       <p class="subtitle-edit">Is your job burning? We can smell it from a mile away. Let us introduce our tool that may warn you before layoffs happen.</p>
       <div class="meta-strip mono">
-        <div>INVESTIGATORS<span> Bora Cömert <br> Alfredo Martins <br> Vi Nguyen <br> Selin Fidan <br> Tim Stöcker </span></div>
+        <div>INVESTIGATORS<span> Alfredo Martins <br> Bora Cömert <br> Selin Fidan <br> Tim Stöcker <br> Vi Nguyen </span></div>
         <div>OPENED<span> SoSe 2026</span></div>
         <div>FILED UNDER<span> Computational Methods for Open Source Intelligence </span></div>
       </div>
@@ -203,11 +203,12 @@
     <section id="data">
       <span class="eyebrow mono">02 — DATA COLLECTION and WRANGLING</span>
       <h2 class="sec-title display">Where It Came From</h2>
-      
-      <p class="sec-intro">We integrated data from three primary sources, Layoffs FYI, NASDAQ, and WARN (Worker Adjustment and Retraining Notification) filings, through a multi stage processing pipeline. The pipeline standardized data formats, resolved overlapping and duplicate records, and harmonized company identifiers to create a unified dataset for downstream analysis.</p>
 
       <div class="card" id="data-collection">
         <span class="tag">Collection</span>
+        
+        <p>We integrated data from three primary sources, Layoffs FYI, NASDAQ, and WARN (Worker Adjustment and Retraining Notification) filings, through a multi stage processing pipeline. The pipeline standardized data formats, resolved overlapping and duplicate records, and harmonized company identifiers to create a unified dataset for downstream analysis.</p>
+        
         <h3>Source and methods</h3>
 
         <ul>
@@ -289,7 +290,7 @@
         </pre>
 
         <h3>Cleaning date</h3>
-        <p>Raw data arrived in three different date formats (DD.MM.YYYY, DD/MM/YYYY, MM/DD/YYYY) with inconsistent company naming conventions. We normalized all dates to ISO 8601 (YYYY-MM-DD), uppercased company names for matching, removed duplicate records (retaining WARN data as authoritative), deduplicated via string similarity matching, dropped companies without valid tickers, and merged financial features from quarterly cashflow and income statement data. Each layoff event was labeled 0 or 1 for prediction tasks.</p>
+        <p>Raw data arrived in three different date formats (DD.MM.YYYY, DD/MM/YYYY, MM/DD/YYYY) with inconsistent company naming conventions. We normalized all dates to ISO 8601 (YYYY-MM-DD), uppercased company names for matching, removed duplicate records (retaining WARN data as authoritative), deduplicated via string similarity matching, dropped companies without valid tickers, and merged financial features from quarterly cashflow and financial statement data. Each layoff event was labeled 0 or 1 for prediction tasks.</p>
         
         <br>
         <h3>Date Normalization</h3>
@@ -422,9 +423,8 @@
             end
 
             subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
-                CLEAN_START([Start cleaning])
                 REMOVE_OVERLAP[Remove overlapping records]
-                MERGE_NAMES[Merge Similar company names]
+                MERGE_NAMES[Merge similar company names]
                 STRING_SIMILARITY[Merge closely related strings]
                 CLEANED_CSV[("cleaned_layoffs.csv")]
             end
@@ -448,7 +448,6 @@
             PARSE_PDF --> SAVE_RAW
             SAVE_RAW --> RAW_CSV
 
-            CLEAN_START --> REMOVE_OVERLAP
             REMOVE_OVERLAP --> MERGE_NAMES
             MERGE_NAMES --> STRING_SIMILARITY
             STRING_SIMILARITY --> CLEANED_CSV
@@ -465,7 +464,7 @@
             
             subgraph PDF_Extraction ["PDF to CSV pipeline"]
                 PDF_INPUT[/"data/raw/layoffs.pdf"\]
-                READ_PDF[Read PDF Content]
+                READ_PDF[Read PDF content]
                 PARSE_PDF[Extract table data]
                 SAVE_RAW[Save to folder data/raw]
                 RAW_CSV[("data/raw/fyi_layoffs.csv")]
@@ -490,7 +489,7 @@
 
             subgraph Data_Cleaning ["Data cleaning and deduplication"]
                 REMOVE_OVERLAP[Remove overlapping records]
-                MERGE_NAMES[Merge Similar company names]
+                MERGE_NAMES[Merge similar company names]
                 STRING_SIMILARITY[Merge closely related strings]
             end
 
@@ -682,10 +681,10 @@
     <div class="card" id="viz-reading" style="margin-top:28px;">
         <span class="tag">Findings; In-depth review </span>
         <h3>RQ2: If so, is it possible to predict it in a 3-6 month timeframe? </h3>
-        <h2> No, not reliably with the data available </h2>
+        <h2> No! </h2>
         <!-- add equation for ROC-AUC time permitting-->
         <p> 
-          There were approximately 20 companies without a record of layoff for every company with a record of layoff. 
+          At least, not reliably with the data available. There were approximately 20 companies without a record of layoff for every company with a record of layoff. 
           This means that the dataset was highly imbalanced, which made it difficult for the model to learn the patterns associated with layoffs. 
         </p> 
         <br>
@@ -709,28 +708,51 @@
           <!-- ============ 05 ETHICS ============ -->
     <section id="ethics">
       <span class="eyebrow mono">03 — ETHICS</span>
-      <h2 class="sec-title display">Who This Affects</h2>
-      <p class="sec-intro">"It's public data" is not an ethics discussion. Name the stakeholders, the risks, and what you actually did to limit harm.</p>
+      <h2 class="sec-title display">Limitations, Stakeholder Risk, & Mitigations</h2>
+      <p class="sec-intro">Consideration of affects on stakeholders, including potential risks, mitigations, and limitations. (add high level summary here for each subsection)</p>
 
+      <div class="card" id="ethics-limitations">
+          <span class="tag">Limitations</span>
+          <h3>Scope of the Project</h3>
+          <p class="placeholder">What concrete limitations do we have? </p>
+
+          <p > We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
+            employee-level data, sensitive information, or personally identifiable
+            information.
+            Low probability, but could happen. Companies with the same name can be resulting in the same ticker. A ticker is defined as the financial info from yFinance, this is explained in detail in the data wrangling section (link to the section)
+            May happen; likely... Might lose companies when uppercasing naming. Capitili 
+            Larger limitation; trusted data from WARN and fyi and NASDAQ. We believe info from yfinance is correct as well however  
+          </p>
+      </div>
+      
       <div class="card" id="ethics-stakeholders">
-        <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span>
-        <h3>Stakeholders and risk</h3>
+        <!--<span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span> -->
+         <span class="tag">Risks</span>
+        <h3> Primary Stakeholder Risk's</h3>
         <p class="placeholder">Who could be affected by this project directly — and how? </p>
 
         <div class="stakeholder-row">
           <div class =stakeholder-column>
             <span class="chip">Employees</span>
-            <p > False positives may create unnecessary concern and affect career decisions, while false negatives 
-                gives a false sense of job security. </p>
+            <p >Workers at predicted-risk companies, whose jobs the model flags as likely to be affected.
+               They bear the most direct consequence of both false positives (unwarranted anxiety, premature job-searching, reputational damage to their employer) 
+               and false negatives (missing a warning they could have acted on)</p>
           </div>
 
           <div class =stakeholder-column>
             <span class="chip">Company</span>
+            <p> employers who may be identified publicly as "at risk" before any layoff is confirmed,
+               based on statistical inference rather than their own disclosure.</p>
             <p >Incorrect predictions may damage the companies reputation and diminish employee morale.</p>
-            <br>
             <p> Predictions whether correct or incorrect may affect future investments or the stock value.</p>
-            <br>
             <p> Customers may interpret a layoff prediction as a sign of financial instability, potentially impacting their trust in the company and their purchasing decisions from said company.</p>
+          </div>
+
+          <div class =stakeholder-column>
+            <span class="chip">Investors / Analysts</span>
+            <p >Incorrect predictions may affect investment decisions and market perception.
+              if positioned as a market signal, their trading or allocation decisions are a direct use case, not a side effect.
+            </p>
           </div>
 
           <div class =stakeholder-column>
@@ -738,19 +760,26 @@
             <p >Incorrect predictions may affect job seekers into accepting risky positions or missing out on better opportunities.</p>
           </div>
 
-          </div>
         </div>
+        <!-- </div> --> 
         
 
-        <div class="card" id="secondary-ethics-stakeholders">
-          <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span>
-          <h3>Secondary Stakeholders and risk</h3>
-          <p class="placeholder">Who could be affected by this project indirectly — and how? </p>
+       <!--- <div class="card" id="secondary-ethics-stakeholders">
+          <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span> -->
+          <h3>Secondary Stakeholder Risk</h3>
+          <p class="placeholder">Review of parties indirectly affected by this project— Families of Employees, Investors, and downstream impacts to Local Communities. </p>
 
           <div class="stakeholder-row">
+
+            <div class =stakeholder-column>
+              <span class="chip">Employees at companies in the same sector</span>
+              <p > sector-wide predictions can create guilt-by-association effects (e.g., "tech layoffs coming" chills hiring or morale broadly)</p>
+            </div>
+
             <div class =stakeholder-column>
               <span class="chip">Families of Employees</span>
-              <p > Families of employees may experience financial stress and emotional distress if a company is predicted to have layoffs.Even if no layoff occurs, the prediction might lead to change of future plans and reduce spending.</p>
+              <p > Families of employees may experience financial stress and emotional distress if a company is predicted to have layoffs.
+                Even if no layoff occurs, the prediction might lead to change of future plans and reduce spending.</p>
             </div>
 
             <div class =stakeholder-column>
@@ -763,10 +792,19 @@
               <p > Layoff predictions, particularly if given out of context , may create economic uncertainty in communities that rely heavily on a particular employer.
                    Even if no layoffs occur, the perception of potential layoffs may reduce employee spending in the local businesses 
                    ,which could lower revenue for local businesses and negatively affect the wider local economy.
+                   towns or suppliers dependent on a flagged employer may see anticipatory economic effects (reduced local spending, credit tightening) before any layoff actually happens.
               </p>
             </div>
 
+            <div class =stakeholder-column>
+              <span class="chip">Media</span>
+              <p > Media may report on layoff predictions, which can amplify the impact of false positives and create unnecessary panic or concern among employees, investors, and the public.</p>
+
             </div>
+
+            <div class =stakeholder-column>
+              <span class="chip">Competitors</span>
+              <p > may exploit a "risk" prediction for recruiting or competitive positioning even if it doesn't play out.</p>
           </div>
   
 
@@ -786,16 +824,6 @@
 
       </div>
 
-      <div class="card" id="ethics-limitations">
-        <span class="tag">Limitations</span>
-        <h3>Scope of the Project</h3>
-        <p class="placeholder">What concrete limitations do we have? </p>
-
-        <p > Write Limitations here. We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
-            employee-level data, sensitive information, or personally identifiable
-            information.
-       </p>
-      </div>
     </section>
 
     <footer class="mono">
