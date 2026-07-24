@@ -212,7 +212,7 @@
         <h3>Source and methods</h3>
 
         <ul>
-          <li><p><strong>Layoffs FYI:</strong> Crowd-sourced global layoff tracker spanning multiple industries.</p></li>
+          <li><p><strong>Layoffs FYI:</strong> Crowd-sourced global layoff tracker spanning multiple industries. </p></li>
           <li><p><strong>WARN Data:</strong> US legally-mandated filings for 2026 and historical records through 2025 (accessed via <a href="https://github.com/datasets/nasdaq-listings" target="_blank">GitHub datasets</a> and archive).</p></li>
           <li><p><strong>NASDAQ:</strong> Ticker listings for company identification.</p></li>
           <li><p><strong>Raw data:</strong> Obtained via direct CSV downloads and the yfinance library for financial data retrieval.</p></li>
@@ -325,7 +325,14 @@
         <p>The <strong>Symbol</strong> column contains the ticker symbols, while the <strong>Security Name</strong> column contains the corresponding company names.</p>
         
         <br>
-        <p>To simplify the analysis, company names were mapped to their corresponding ticker symbols. The ticker information was obtained from the NASDAQ dataset described earlier. See below the illustration, a new collumn <Tiker> was added doing the </p>
+        
+        <p>
+          To simplify the analysis, company names were mapped to their corresponding ticker symbols.
+          For the layoff dataset, ticker information was obtained using <code>yfinance</code>, while
+          for the non-layoff dataset, ticker symbols were retrieved from the NASDAQ dataset described
+          earlier. As illustrated below, a new column, <code>Ticker</code>, was added to store the
+          corresponding ticker symbol for each company.
+        </p>
 
         <img src="images/data-collection/tickers_merged_with_layoffs.png" alt="Tickers merged with layoffs" />
         
@@ -371,9 +378,9 @@
 
         <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 (as an example) filing will label:</p>
         <ul style="font-size: 0.9em; margin: 0.5rem 0;">
-          <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
-          <li><code>layoff_next_quarter = 1</code> for the Q1 2024 row (enabling prediction of imminent events)</li>
-          <li><code>layoff = 1</code> for both rows (binary classification)</li>
+          <li><code>layoff_this_quarter = 1</code> for the Q1 2024 row</li>
+          <li><code>layoff_next_quarter = 1</code> for the Q2 2024 row (enabling prediction of imminent events)</li>
+          <li><code>layoff = layoff_this_quarter || layoff_next_quarter, where || represent OR operation.</li>
         </ul>
 
         <img src="images/data-collection/sample_layoff_quarter.png" alt="Sample quarters" />
