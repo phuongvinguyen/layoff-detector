@@ -359,204 +359,15 @@
             Missing values were stored as <strong>NaN</strong>, allowing machine learning models to handle or
             impute incomplete information while maintaining a consistent feature matrix.
         </p>
-
-        <br>
-        <h3>Labeling</h3>
-
-        <p>The dataset supports two different modeling objectives, each with its own labeling logic:</p>
-
-        <h4>Quarter-Level Labeling</h4>
-
-        
-        <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 (as an example) filing will label:</p>
-        <ul style="font-size: 0.9em; margin: 0.5rem 0;">
-          <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
-          <li><code>layoff_next_quarter = 1</code> for the Q1 2024 row (enabling prediction of imminent events)</li>
-          <li><code>layoff = 1</code> for both rows (binary classification)</li>
-        </ul>
-
-        <img src="images/data-collection/sample_layoff_quarter.png" alt="Sample quarters" />
-        
-        <h4>Company-Level Labeling</h4>
-        
-        <p>All quarterly records for a given company receive the same label, regardless of when the layoff occurred:</p>
-        <ul style="font-size: 0.9em; margin: 0.5rem 0;">
-          <li><code>layoff = 1</code> for all rows from companies with any documented layoff</li>
-          <li><code>layoff = 0</code> for all rows from confirmed no-layoff companies</li>
-        </ul>
-        
-        <p>Both schemes preserve the <code>source_pool</code> column, enabling auditing of any prediction back to its origin (layoff-tracked or confirmed no-layoff).</p>
-
-        <img src="images/data-collection/sample_layoff_all.png" alt="Sample all companies" />
-
-        <h4>Data Integrity Checks</h4>
-
-        <p>After merging, the combined dataset was validated to ensure:</p>
-        <ul>
-          <li>No duplicate (company, date) pairs exist within the merged dataset</li>
-          <li>All label columns contain only valid values (0 or 1)</li>
-          <li>No ticker overlap remains between the two source pools</li>
-          <li>Feature columns are consistent across all rows</li>
-        </ul>
-        <p>These checks confirm that downstream models receive clean, unambiguous training data.</p>
-
-        <ul>
-          <li><p><strong>Ticker:</strong> A short alphabetic code identifying a publicly-traded company (e.g., ADS = Adidas)</p></li>
-          <li><p><strong>Financial Statement:</strong> Quarterly report of company revenue, expenses, assets, and liabilities</p></li>
-          <li><p><strong>Financial Feature:</strong> A derived metric or ratio computed from financial statements for predictive modeling</p></li>
-        </ul>
-          
-        <p>All data processing steps can also be visualized as a flowchart.</p>
-
-        <pre class="mermaid">
-          graph TD
-            subgraph PDF_Extraction ["PDF to CSV Pipeline"]
-                PDF_INPUT[/"data/raw/layoffs.pdf"\]
-                READ_PDF[Read PDF Content]
-                PARSE_PDF[Extract Table Data]
-                SAVE_RAW[Save to folder data/raw]
-                RAW_CSV[("data/raw/fyi_layoffs.csv")]
-            end
-
-            subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
-                CLEAN_START([Start Cleaning])
-                REMOVE_OVERLAP[Remove Overlapping Records]
-                MERGE_NAMES[Merge Similar Company Names]
-                STRING_SIMILARITY[Merge Closely Related Strings]
-                CLEANED_CSV[("cleaned_layoffs.csv")]
-            end
-
-            subgraph Finance_Pipeline ["get_finance_data Pipeline"]
-                SEARCH_TICKERS[Search Tickers via yfinance.Search]
-                DROP_MISSING[Drop Rows without Tickers]
-                TICKERS_CSV[("LAYOFFS_WITH_TICKERS_CSV_PATH")]
-                
-                subgraph Data_Fetch ["Parallel Data Fetching"]
-                    FETCH_CASHFLOW[Fetch Quarterly Cashflow]
-                    FETCH_FINANCIALS[Fetch Quarterly Financials]
-                end
-                
-                CASHFLOW_STORAGE[("CASHFLOW_DIR/*.csv")]
-                FINANCIAL_STORAGE[("FINANCIAL_DATA_DIR/*.csv")]
-            end
-
-            PDF_INPUT --> READ_PDF
-            READ_PDF --> PARSE_PDF
-            PARSE_PDF --> SAVE_RAW
-            SAVE_RAW --> RAW_CSV
-
-            CLEAN_START --> REMOVE_OVERLAP
-            REMOVE_OVERLAP --> MERGE_NAMES
-            MERGE_NAMES --> STRING_SIMILARITY
-            STRING_SIMILARITY --> CLEANED_CSV
-
-            CLEANED_CSV --> SEARCH_TICKERS
-            SEARCH_TICKERS --> DROP_MISSING
-            DROP_MISSING --> TICKERS_CSV
-            
-            TICKERS_CSV --> FETCH_CASHFLOW
-            TICKERS_CSV --> FETCH_FINANCIALS
-            
-            FETCH_CASHFLOW --> CASHFLOW_STORAGE
-            FETCH_FINANCIALS --> FINANCIAL_STORAGE
-            
-            subgraph Main_Project ["Project: layoff-detector (root)"]
-                START([start_point: generate_layoff])
-            end
-
-            subgraph PDF_Extraction ["PDF to CSV Pipeline"]
-                PDF_INPUT[/"data/raw/layoffs.pdf"\]
-                READ_PDF[Read PDF Content]
-                PARSE_PDF[Extract Table Data]
-                SAVE_RAW[Save to folder data/raw]
-                RAW_CSV[("data/raw/fyi_layoffs.csv")]
-            end
-
-            subgraph Data_Ingestion ["Data Ingestion"]
-                FILE_A[(File fyi_layoffs.csv)]
-                FILE_B[(File WARNDatabase2026.csv)]
-                FILE_C[(File WARNDatabaseMasterExcluding2026_.csv)]
-                
-                CONV_LIST[Convert to List]
-                SHOW_DATA[Display Data]
-                PARSE_FORMAT[Parse Format]
-            end
-
-            subgraph Preprocessing ["Data Preprocessing"]
-                DATE_TRANSFORM[Transform Date: DD.MM.Y to YY.MM.DD]
-                NORMALIZE[Normalize Data]
-                JOIN_FILES[Join into Single File]
-            end
-
-            subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
-                REMOVE_OVERLAP[Remove Overlapping Records]
-                MERGE_NAMES[Merge Similar Company Names]
-                STRING_SIMILARITY[Merge Closely Related Strings]
-            end
-
-            subgraph Output ["Final Output"]
-                FINAL_GEN[Generate Final File]
-                RESULT[(final_layoffs.csv)]
-            end
-
-            PDF_INPUT --> READ_PDF
-            READ_PDF --> PARSE_PDF
-            PARSE_PDF --> SAVE_RAW
-            SAVE_RAW --> RAW_CSV
-
-            RAW_CSV --> FILE_A
-            START --> FILE_B
-            START --> FILE_C
-
-            FILE_A --> CONV_LIST
-            FILE_B --> CONV_LIST
-            FILE_C --> CONV_LIST
-
-            CONV_LIST --> SHOW_DATA
-            SHOW_DATA --> PARSE_FORMAT
-            
-            PARSE_FORMAT --> DATE_TRANSFORM
-            DATE_TRANSFORM --> NORMALIZE
-            NORMALIZE --> JOIN_FILES
-
-            JOIN_FILES --> REMOVE_OVERLAP
-            REMOVE_OVERLAP --> MERGE_NAMES
-            MERGE_NAMES --> STRING_SIMILARITY
-            
-            STRING_SIMILARITY --> FINAL_GEN
-            FINAL_GEN --> RESULT
-        </pre>
-
-        <p>
-            Upon completion of this step, the data is transformed into the desired format and is ready for further analysis.
-        </p>
       </div>
 
       <div class="card" id="data-labelling">
-        <h4>Financial Feature Extraction and Normalization</h4>
-
-        <p>
-            Raw yfinance data includes three financial statement categories:
-            <strong>balance sheet, cash flow statement, and income statement</strong>.
-            Since raw values vary significantly across companies, they were transformed into
-            <strong>normalized financial features</strong>, including ratios, per-share metrics, and standardized values.
-            This resulted in <strong>347 financial features per company-quarter record</strong> with a consistent structure.
-        </p>
-
-        <p>
-            Financial features were aligned across datasets using the <strong>union of all available features</strong>.
-            Missing values were stored as <strong>NaN</strong>, allowing machine learning models to handle or
-            impute incomplete information while maintaining a consistent feature matrix.
-        </p>
-
-        <br>
         <h3>Labeling</h3>
 
         <p>The dataset supports two different modeling objectives, each with its own labeling logic:</p>
 
         <h4>Quarter-Level Labeling</h4>
 
-        
         <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 (as an example) filing will label:</p>
         <ul style="font-size: 0.9em; margin: 0.5rem 0;">
           <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
@@ -577,7 +388,10 @@
         <p>Both schemes preserve the <code>source_pool</code> column, enabling auditing of any prediction back to its origin (layoff-tracked or confirmed no-layoff).</p>
 
         <img src="images/data-collection/sample_layoff_all.png" alt="Sample all companies" />
+        
+      </div>
 
+      <div class="card" id="data-integrity-and-flow">
         <h4>Data Integrity Checks</h4>
 
         <p>After merging, the combined dataset was validated to ensure:</p>
@@ -734,20 +548,13 @@
         <h3>Our approach</h3>
         <p>To address our reasearch questions, we formulate layoff prediction as supervised binary classification (layoff or non-layoff) using quarterly company financial data,
           including balance sheet, financial data and cashflow.
-          After processing, the dataset contains approximately 30,000 company-quarters across 5,381 companies.
-          The dataset for the first research question (RQ1) is balanced, with approximately 12,047 positive layoff rows and 17,971 negative non-layoff rows. 
-          However, the dataset for the second research question (RQ2) is more imbalanced, with approximately 1,205 positive layoff rows and 28,813 negative non-layoff rows.
+          After processing, the dataset contains approximately <strong>30,000</strong> company-quarters across <strong>5,381</strong> companies.
+          The dataset for the first research question (RQ1) is balanced, with approximately <strong>12,047 positive layoff rows</strong> and <strong>12,047 negative non-layoff rows</strong>. 
+          However, the dataset for the second research question (RQ2) is more imbalanced, with approximately <strong>1,205 positive layoff rows</strong> and <strong>28,813 negative non-layoff rows</strong>.
           Each row in our dataset represents a single company in a single quarter, with features derived from the company's financial statements and the target variable indicating whether a layoff occurred in that quarter or the next.</p>
-          <br>
-          <!-- We test two framings that map directly onto our research questions: <br>
-          <ul>
-            <li><strong>RQ1:</strong> has this company ever had a layoff, given its financial profile?</li>
-            <li> <strong>RQ2:</strong> will a layoff be announced in the same or next quarter?</li>
-          </ul> -->
-          <!-- For both questions, we use the same pipeline and evaluation framework,
-          but the second framing is more challenging because it requires predicting a future event rather than a historical one. -->
+        
         <p style="margin-top:14px;">We compared six supervised learning algorithms representing both linear and non-linear families: 
-          Logistic Regression, Random Forest, Gradient Boosting, XGBoost, SVM, KNN, and a Decision Tree.
+          Logistic Regression, Random Forest, Gradient Boosting, XGBoost, SVM and KNN.
           Since the relationship between financial indicators and layoffs is unlikely to be purely linear, 
           tree-based ensemble methods were included to capture more complex interactions among the features.</p>
         <p style="margin-top:14px;">All models are trained using the same preprocessing pipeline to ensure a fair comparison.<br>
@@ -761,11 +568,19 @@
             The training set is then split into five stratified folds. During cross-validation, the model is trained on four folds and 
             validated on the remaining fold, and this process is repeated five times until each fold has served as the validation set once.
             The performance metrics are averaged across the five iterations, providing a more robust estimate than a single train-validation split.
-            Stratification preserves the original class layoff-to-non-layoff ratio in each fold, which is particularly important because layoffs account for
+            In the first research question <strong>RQ1</strong> the dataset is balance with approximately 40% of the observations are layoffs and
+            for the second research question <strong>RQ2</strong> the stratification preserves the original class layoff-to-non-layoff ratio in each fold, which is particularly important because layoffs account for
             only about 4% of the observations.
 
           </p>
-
+          <figure class="img-md">
+            <img src="images/analysis/train_test_all.png" alt="Train and test set all" />
+            <figcaption>Relation of train and test set in RQ1</figcaption>
+          </figure>
+          <figure class="img-md">
+            <img src="images/analysis/train_test_current_or_next.png" alt="Train and test set all" />
+            <figcaption>Relation of train and test set in RQ2</figcaption>
+          </figure>
          <p style="margin-top:14px;">
           Given this class imbalance, model performance is accessed using both the ROC-AUC and Precision-Recall AUC metrics.
           While ROC-AUC provides an overall measure of the model's ability to discriminate between the classes, 
@@ -839,19 +654,6 @@
       <span class="eyebrow mono">05 — VISUALISATION and DISSEMINATION</span>
       <h2 class="sec-title display">Show, Don't Just Tell</h2>
       <p class="sec-intro">A picture should be worth 1000 words here — clear, labelled, and honest about what it shows. Drop your charts and screenshots into the slots below.</p>
-
-     <!--  <div class="viz-grid" id="viz-figures">
-        <div class="viz-slot">[FIGURE 1 — replace with your visualization. Label axes, add a caption.]</div>
-        <div class="viz-slot">[FIGURE 2 — replace with your visualization. Label axes, add a caption.]</div>
-        <div class="viz-slot wide">[FIGURE 3 — a wider view: map, timeline, or network diagram]</div>
-      </div>
-
-     <div class="card" id="viz-reading" style="margin-top:28px;">
-        <span class="tag">Reading the picture</span>
-        <p class="placeholder">[One or two sentences per figure explaining what the reader should notice and why it matters — don't just caption, interpret.]</p>
-      </div>
-    </section>
-    -->
 
     <div class="card" id="viz-reading" style="margin-top:28px;">
         <span class="tag">Findings; In-depth review </span>
