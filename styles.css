@@ -362,7 +362,7 @@ tbody tr:last-child td {
   font-family:"Courier New",monospace;
   font-size:11px;
   letter-spacing:0.14em;
-  color:var(--gold);
+  color:var(--red);
   border:1.5px dashed var(--gold);
   padding:5px 12px;
   transform:rotate(-1.5deg);
