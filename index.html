@@ -366,8 +366,7 @@
 
         <p>
             Financial features were aligned across datasets using the <strong>union of all available features</strong>.
-            Missing values were stored as <strong>NaN</strong>, allowing machine learning models to handle or
-            impute incomplete information while maintaining a consistent feature matrix.
+            Missing values were stored as <strong>NaN</strong>.
         </p>
       </div>
 
@@ -434,7 +433,7 @@
             subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
                 REMOVE_OVERLAP[Remove overlapping records]
                 MERGE_NAMES[Merge similar company names]
-                STRING_SIMILARITY[Merge closely related strings]
+                STRING_SIMILARITY[Stemming: Pattern matching and string similarity]
                 CLEANED_CSV[("cleaned_layoffs.csv")]
             end
 
@@ -565,7 +564,7 @@
           
           
         <p style="margin-top:14px;">All models are trained using the same preprocessing pipeline to ensure a fair comparison.<br>
-          Missing numberical values are imputed with the median value for each feature, and binary missingness indicators are added because
+          Missing values (NaN) are imputed with the median value for each feature, and binary missingness indicators are added because
           the absence of financial data itself may contain helpful information. Moreover, the features no variance are dropped,
           and stadardization is applied to ensure that all features contribute equally to the model's learning process.</p>
           <figure class="img-md">
@@ -701,13 +700,13 @@
 
         <p> The image above is a visual representation of the imbalance in the dataset. </p>
         
-
-          <p> Model outputs are shown below:</p>
+          <p> Our other model outputs are shown below:</p>
          <img src="images/findings/RQ2modeloutputs.png" alt="Results All" />
          <p> Our best performing model, Random Forest, achieved a ROC-AUC of 0.87, but the precision and recall on the layoff class were only 0.41 and 0.28. meaning that
-          approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. The reason for 
-          despite having high ROC-AUC values, the models performing poorly on the minority class, layoffs, is due to the 20:1 imbalance in the dataset. The seemingly strong performance is by predominantly predicting the majority class outcome "no layoffs" while failing to identify actual layoffs.
-        </p>
+          approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. This is not a reliable enough prediction to be useful in practice.
+          </p>
+         <p> Despite having high ROC-AUC values, the models performed poorly on the minority class, layoffs, because of the 20:1 imbalance in the dataset. The seemingly strong performance is by predominantly predicting the majority class outcome "no layoffs" while failing to identify actual layoffs. </p>
+         <p> Therefore the results suggest that layoffs cannot be reliably predicted in a 3-6 month timeframe with the available data.</p>
 
 
         <!-- <p class="placeholder">Here we will explain this image</p> -->
