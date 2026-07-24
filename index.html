@@ -645,24 +645,27 @@
            <figure class="img-md">
             <img src="images/analysis/top30xgboost.png" alt="Most important features" />
             <figcaption>Top 30 most important features for the XGBoost model.</figcaption>
-            <p style="margin-top:14px;">The top 30 most important features for the XGBoost model are shown in the figure above. The most important features for predicting layoffs are presence indicators, since the absence of certain information can itself provide valuable insight.</p>
+            
           </figure>
+          <p style="margin-top:14px;">The top 30 most important features for the XGBoost model are shown in the figure above. The most important features for predicting layoffs are presence indicators, 
+              since the absence of certain information can itself provide valuable insight.</p>
         <br>
-        <p style="margin-top:14px;"><strong>RQ2</strong> is the harder and more useful question: will a layoff be announced in the same or next quarter, the framing that would actually let someone act early. 
+        <p style="margin-top:14px;"><strong>RQ2</strong> is the harder and more relevant question: will a layoff be announced in the same or next quarter, the framing that would actually let someone act early. 
           Because true positives are only about 4% of rows, accuracy is a misleading headline number here (~0.95, driven almost entirely by the majority class). 
           Our best model, <strong>Random Forest</strong>, reached a test <strong>ROC-AUC</strong> of <strong>0.87</strong>, but precision and recall on the layoff class itself were only 0.41 and 0.28 (F1 0.33) before threshold tuning, which is a much weaker result than the topline ROC-AUC suggests.</p>
         <p style="margin-top:14px;">Plainly, the financial fundamentals carry a signal for "does this company's profile resemble one that has had layoffs", but we can't yet reliably answer "will it happen in the next one to two quarters" from public financials alone. 
           Many real layoff triggers leadership decisions, M-A, strategic pivots that simply aren't visible in balance-sheet numbers months in advance. 
           Our latest pipeline iteration tries to trade recall for precision via threshold tuning, on the view that a confident false alarm damages trust more than a missed one, but that run currently fails before producing metrics: the imputer is fed a raw ticker column and errors out trying to average a string.
           Until that's fixed, the untuned RQ2 numbers above are the ones to trust.
-          Our model also shows that the most important features for predicting layoffs are related to liquidity
-          and leverage, which align with financial intuition. The top 30 most important features for the Random Forest model are shown in the figure below.
+          
         </p>
          <figure class="img-md">
             <img src="images/analysis/important_features.png" alt="Most important features" />
             <figcaption>Top 30 most important features for the Random Forest model.</figcaption>
-            <p style="margin-top:14px;">The top 30 most important features for the Random Forest model are shown in the figure above. The most important features for predicting layoffs are presence indicators, since the absence of certain information can itself provide valuable insight.</p>
+           
           </figure>
+         <p style="margin-top:14px;">The top 30 most important features for the Random Forest model are shown in the figure above. The most important features for predicting layoffs are presence indicators, 
+              since the absence of certain information can itself provide valuable insight.</p>
          
       </div>
     </section>
@@ -712,11 +715,11 @@
         <!-- <p class="placeholder">Here we will explain this image</p> -->
       </div>
       
-      
+      </section>
 
           <!-- ============ 05 ETHICS ============ -->
     <section id="ethics">
-      <span class="eyebrow mono">03 — ETHICS</span>
+      <span class="eyebrow mono">05 — ETHICS</span>
       <h2 class="sec-title display">Disclaimers, Limitations, Risks, & Mitigations</h2>
       <p class="sec-intro">Here we layout general disclaimers of our model as well as considerations of project limitations, their risk on stakeholders, and mitigations.</p>
 
