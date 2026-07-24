@@ -676,10 +676,10 @@
     <div class="card" id="viz-reading" style="margin-top:28px;">
         <span class="tag">Findings; In-depth review </span>
         <h3>RQ2: If so, is it possible to predict it in a 3-6 month timeframe? </h3>
-        <h2> No, not reliably with the data available </h2>
+        <h2> No! </h2>
         <!-- add equation for ROC-AUC time permitting-->
         <p> 
-          There were approximately 20 companies without a record of layoff for every company with a record of layoff. 
+          At least, not reliably with the data available. There were approximately 20 companies without a record of layoff for every company with a record of layoff. 
           This means that the dataset was highly imbalanced, which made it difficult for the model to learn the patterns associated with layoffs. 
         </p> 
         <br>
@@ -703,12 +703,27 @@
           <!-- ============ 05 ETHICS ============ -->
     <section id="ethics">
       <span class="eyebrow mono">03 — ETHICS</span>
-      <h2 class="sec-title display">Who This Affects</h2>
-      <p class="sec-intro">"It's public data" is not an ethics discussion. Name the stakeholders, the risks, and what you actually did to limit harm.</p>
+      <h2 class="sec-title display">Limitations, Stakeholder Risk, & Mitigations</h2>
+      <p class="sec-intro">Consideration of affects on stakeholders, including potential risks, mitigations, and limitations. (add high level summary here for each subsection)</p>
 
+      <div class="card" id="ethics-limitations">
+          <span class="tag">Limitations</span>
+          <h3>Scope of the Project</h3>
+          <p class="placeholder">What concrete limitations do we have? </p>
+
+          <p > We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
+            employee-level data, sensitive information, or personally identifiable
+            information.
+            Low probability, but could happen. Companies with the same name can be resulting in the same ticker. A ticker is defined as the financial info from yFinance, this is explained in detail in the data wrangling section (link to the section)
+            May happen; likely... Might lose companies when uppercasing naming. Capitili 
+            Larger limitation; trusted data from WARN and fyi and NASDAQ. We believe info from yfinance is correct as well however  
+          </p>
+      </div>
+      
       <div class="card" id="ethics-stakeholders">
-        <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span>
-        <h3>Stakeholders and risk</h3>
+        <!--<span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span> -->
+         <span class="tag">Risks</span>
+        <h3> Primary Stakeholder Risk's</h3>
         <p class="placeholder">Who could be affected by this project directly — and how? </p>
 
         <div class="stakeholder-row">
@@ -740,14 +755,14 @@
             <p >Incorrect predictions may affect job seekers into accepting risky positions or missing out on better opportunities.</p>
           </div>
 
-          </div>
         </div>
+        <!-- </div> --> 
         
 
-        <div class="card" id="secondary-ethics-stakeholders">
-          <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span>
-          <h3>Secondary Stakeholders and risk</h3>
-          <p class="placeholder">Who could be affected by this project indirectly — and how? </p>
+       <!--- <div class="card" id="secondary-ethics-stakeholders">
+          <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span> -->
+          <h3>Secondary Stakeholder Risk</h3>
+          <p class="placeholder">Review of parties indirectly affected by this project— Families of Employees, Investors, and downstream impacts to Local Communities. </p>
 
           <div class="stakeholder-row">
 
@@ -804,16 +819,6 @@
 
       </div>
 
-      <div class="card" id="ethics-limitations">
-        <span class="tag">Limitations</span>
-        <h3>Scope of the Project</h3>
-        <p class="placeholder">What concrete limitations do we have? </p>
-
-        <p > Write Limitations here. We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
-            employee-level data, sensitive information, or personally identifiable
-            information.
-       </p>
-      </div>
     </section>
 
     <footer class="mono">
