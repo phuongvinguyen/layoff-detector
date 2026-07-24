@@ -715,17 +715,25 @@
         <div class="stakeholder-row">
           <div class =stakeholder-column>
             <span class="chip">Employees</span>
-            <p > False positives may create unnecessary concern and affect career decisions, while false negatives 
-                gives a false sense of job security. </p>
+            <p >Workers at predicted-risk companies, whose jobs the model flags as likely to be affected.
+               They bear the most direct consequence of both false positives (unwarranted anxiety, premature job-searching, reputational damage to their employer) 
+               and false negatives (missing a warning they could have acted on)</p>
           </div>
 
           <div class =stakeholder-column>
             <span class="chip">Company</span>
+            <p> employers who may be identified publicly as "at risk" before any layoff is confirmed,
+               based on statistical inference rather than their own disclosure.</p>
             <p >Incorrect predictions may damage the companies reputation and diminish employee morale.</p>
-            <br>
             <p> Predictions whether correct or incorrect may affect future investments or the stock value.</p>
-            <br>
             <p> Customers may interpret a layoff prediction as a sign of financial instability, potentially impacting their trust in the company and their purchasing decisions from said company.</p>
+          </div>
+
+          <div class =stakeholder-column>
+            <span class="chip">Investors / Analysts</span>
+            <p >Incorrect predictions may affect investment decisions and market perception.
+              if positioned as a market signal, their trading or allocation decisions are a direct use case, not a side effect.
+            </p>
           </div>
 
           <div class =stakeholder-column>
@@ -743,9 +751,16 @@
           <p class="placeholder">Who could be affected by this project indirectly — and how? </p>
 
           <div class="stakeholder-row">
+
+            <div class =stakeholder-column>
+              <span class="chip">Employees at companies in the same sector</span>
+              <p > sector-wide predictions can create guilt-by-association effects (e.g., "tech layoffs coming" chills hiring or morale broadly)</p>
+            </div>
+
             <div class =stakeholder-column>
               <span class="chip">Families of Employees</span>
-              <p > Families of employees may experience financial stress and emotional distress if a company is predicted to have layoffs.Even if no layoff occurs, the prediction might lead to change of future plans and reduce spending.</p>
+              <p > Families of employees may experience financial stress and emotional distress if a company is predicted to have layoffs.
+                Even if no layoff occurs, the prediction might lead to change of future plans and reduce spending.</p>
             </div>
 
             <div class =stakeholder-column>
@@ -758,10 +773,19 @@
               <p > Layoff predictions, particularly if given out of context , may create economic uncertainty in communities that rely heavily on a particular employer.
                    Even if no layoffs occur, the perception of potential layoffs may reduce employee spending in the local businesses 
                    ,which could lower revenue for local businesses and negatively affect the wider local economy.
+                   towns or suppliers dependent on a flagged employer may see anticipatory economic effects (reduced local spending, credit tightening) before any layoff actually happens.
               </p>
             </div>
 
+            <div class =stakeholder-column>
+              <span class="chip">Media</span>
+              <p > Media may report on layoff predictions, which can amplify the impact of false positives and create unnecessary panic or concern among employees, investors, and the public.</p>
+
             </div>
+
+            <div class =stakeholder-column>
+              <span class="chip">Competitors</span>
+              <p > may exploit a "risk" prediction for recruiting or competitive positioning even if it doesn't play out.</p>
           </div>
   
 
