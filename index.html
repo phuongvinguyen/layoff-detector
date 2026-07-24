@@ -710,17 +710,28 @@
           <!-- ============ 05 ETHICS ============ -->
     <section id="ethics">
       <span class="eyebrow mono">03 — ETHICS</span>
-      <h2 class="sec-title display">Limitations, Stakeholder Risk, & Mitigations</h2>
-      <p class="sec-intro">Consideration of affects on stakeholders, including potential risks, mitigations, and limitations. (add high level summary here for each subsection)</p>
+      <h2 class="sec-title display">Disclaimers, Limitations, Risks, & Mitigations</h2>
+      <p class="sec-intro">Consideration of project limitations, their risk on stakeholders, and mitigations. (add high level summary here for each subsection)</p>
 
+     <div class="card" id="ethics-disclaimer">
+          <span class="tag">Disclaimer</span>
+          <h3>Please consider before utilizing this tool</h3>
+          <!-- <p class="placeholder"> limitations do we have? </p> -->
+
+          <p > The model shouldn’t be used solely to make personal, business or investment decision. Our aim is to provide a tool that can help identify potential layoff risks, but it is not a definitive predictor of layoffs.
+            The model is not a substitute for professional advice, and it should not be relied upon as the sole basis for making decisions. 
+            The model is based on historical data and may not accurately predict future events. Referring to findings for RQ2, we cannot accuratly predict the layoff timeline! 
+            The model will not recieve regular updates or maintenance, thus it may degrade over time.   
+          </p>
+      </div> 
+      
       <div class="card" id="ethics-limitations">
           <span class="tag">Limitations</span>
           <h3>Scope of the Project</h3>
-          <p class="placeholder">What concrete limitations do we have? </p>
+          <!-- <p class="placeholder"> limitations do we have? </p> -->
 
-          <p > We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
-            employee-level data, sensitive information, or personally identifiable
-            information.
+          <p > We exclusively used publicly available company level financial data from yfinance, WARN and layoffs.fyi to train our models. We did not collect or use any
+            employee-level data, sensitive information, or personally identifiable information.
             Low probability, but could happen. Companies with the same name can be resulting in the same ticker. A ticker is defined as the financial info from yFinance, this is explained in detail in the data wrangling section (link to the section)
             May happen; likely... Might lose companies when uppercasing naming. Capitili 
             Larger limitation; trusted data from WARN and fyi and NASDAQ. We believe info from yfinance is correct as well however  
@@ -763,7 +774,7 @@
           </div>
 
         </div>
-        <!-- </div> --> 
+     <!--- </div> -->
         
 
        <!--- <div class="card" id="secondary-ethics-stakeholders">
