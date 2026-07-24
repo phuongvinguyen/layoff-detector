@@ -78,7 +78,7 @@
         <span class="thread"></span>
         <a href="#ethics"><span class="num">05</span>Ethics</a>
         <div class="sub-links">
-          <a href="#ethics-stakeholders" data-sub="ethics-stakeholders">Stakeholders &amp; Risk</a>
+          <a href="#ethics-stakeholders" data-sub="ethics-stakeholders">Stakeholders and Risk</a>
           <a href="#ethics-mitigations" data-sub="ethics-mitigations">Mitigations</a>
           <a href="#ethics-limitations" data-sub="ethics-limitations">Limitations</a>
         </div>
@@ -204,7 +204,7 @@
 
     <!-- ============ 02 DATA ============ -->
     <section id="data">
-      <span class="eyebrow mono">02 — DATA COLLECTION &amp; WRANGLING</span>
+      <span class="eyebrow mono">02 — DATA COLLECTION and WRANGLING</span>
       <h2 class="sec-title display">Where It Came From</h2>
       
       <p class="sec-intro">We integrated data from three primary sources, Layoffs FYI, NASDAQ, and WARN (Worker Adjustment and Retraining Notification) filings, through a multi stage processing pipeline. The pipeline standardized data formats, resolved overlapping and duplicate records, and harmonized company identifiers to create a unified dataset for downstream analysis.</p>
@@ -263,7 +263,7 @@
           A["fyi_layoffs.csv<br/>DD.MM.YYYY"]
           B["WARNDatabase2026.csv<br/>DD/MM/YYYY"]
           C["WARNDatabaseMaster<br/>MM/DD/YYYY"]
-          NORM["Normalize dates to<br/>ISO 8601 &amp; merge"]
+          NORM["Normalize dates to<br/>ISO 8601 and merge"]
           
           A --> NORM
           B --> NORM
@@ -291,7 +291,7 @@
           MATCH --> FILTER
         </pre>
 
-        <h3>Cleaning</h3>
+        <h3>Cleaning date</h3>
         <p>Raw data arrived in three different date formats (DD.MM.YYYY, DD/MM/YYYY, MM/DD/YYYY) with inconsistent company naming conventions. We normalized all dates to ISO 8601 (YYYY-MM-DD), uppercased company names for matching, removed duplicate records (retaining WARN data as authoritative), deduplicated via string similarity matching, dropped companies without valid tickers, and merged financial features from quarterly cashflow and income statement data. Each layoff event was labeled 0 or 1 for prediction tasks.</p>
         
         <br>
@@ -307,8 +307,10 @@
         <img src="images/data-collection/upper_case_company.png" alt="Company name uppercasing step" />
 
         <p>After merging all datasets, the next step focused on harmonizing company names to ensure consistent identification across data sources.</p>
-        
-        <br>
+
+      </div>
+
+      <div class="card" id="data-company-harmonization">
         <h3>Company Name Harmonization</h3>
 
         <p>Company names were converted to uppercase to facilitate matching with ticker symbols. Overlapping records between the FYI and WARN datasets were deduplicated by retaining WARN records (legally mandated filings) and removing duplicate FYI records.</p>
@@ -341,7 +343,11 @@
             and merged with the layoff dataset as financial features for model training.
         </p>
 
-        <h4>Financial Feature Extraction &amp; Normalization</h4>
+      </div>
+ 
+
+      <div class="card" id="data-financial-feature">
+        <h4>Financial Feature Extraction and Normalization</h4>
 
         <p>
             Raw yfinance data includes three financial statement categories:
@@ -528,11 +534,197 @@
             Upon completion of this step, the data is transformed into the desired format and is ready for further analysis.
         </p>
       </div>
-      
+
+      <div class="card" id="data-labelling">
+        <h4>Financial Feature Extraction and Normalization</h4>
+
+        <p>
+            Raw yfinance data includes three financial statement categories:
+            <strong>balance sheet, cash flow statement, and income statement</strong>.
+            Since raw values vary significantly across companies, they were transformed into
+            <strong>normalized financial features</strong>, including ratios, per-share metrics, and standardized values.
+            This resulted in <strong>347 financial features per company-quarter record</strong> with a consistent structure.
+        </p>
+
+        <p>
+            Financial features were aligned across datasets using the <strong>union of all available features</strong>.
+            Missing values were stored as <strong>NaN</strong>, allowing machine learning models to handle or
+            impute incomplete information while maintaining a consistent feature matrix.
+        </p>
+
+        <br>
+        <h3>Labeling</h3>
+
+        <p>The dataset supports two different modeling objectives, each with its own labeling logic:</p>
+
+        <h4>Quarter-Level Labeling</h4>
+
+        
+        <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 (as an example) filing will label:</p>
+        <ul style="font-size: 0.9em; margin: 0.5rem 0;">
+          <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
+          <li><code>layoff_next_quarter = 1</code> for the Q1 2024 row (enabling prediction of imminent events)</li>
+          <li><code>layoff = 1</code> for both rows (binary classification)</li>
+        </ul>
+
+        <img src="images/data-collection/sample_layoff_quarter.png" alt="Sample quarters" />
+        
+        <h4>Company-Level Labeling</h4>
+        
+        <p>All quarterly records for a given company receive the same label, regardless of when the layoff occurred:</p>
+        <ul style="font-size: 0.9em; margin: 0.5rem 0;">
+          <li><code>layoff = 1</code> for all rows from companies with any documented layoff</li>
+          <li><code>layoff = 0</code> for all rows from confirmed no-layoff companies</li>
+        </ul>
+        
+        <p>Both schemes preserve the <code>source_pool</code> column, enabling auditing of any prediction back to its origin (layoff-tracked or confirmed no-layoff).</p>
+
+        <img src="images/data-collection/sample_layoff_all.png" alt="Sample all companies" />
+
+        <h4>Data Integrity Checks</h4>
+
+        <p>After merging, the combined dataset was validated to ensure:</p>
+        <ul>
+          <li>No duplicate (company, date) pairs exist within the merged dataset</li>
+          <li>All label columns contain only valid values (0 or 1)</li>
+          <li>No ticker overlap remains between the two source pools</li>
+          <li>Feature columns are consistent across all rows</li>
+        </ul>
+        <p>These checks confirm that downstream models receive clean, unambiguous training data.</p>
+
+        <ul>
+          <li><p><strong>Ticker:</strong> A short alphabetic code identifying a publicly-traded company (e.g., ADS = Adidas)</p></li>
+          <li><p><strong>Financial Statement:</strong> Quarterly report of company revenue, expenses, assets, and liabilities</p></li>
+          <li><p><strong>Financial Feature:</strong> A derived metric or ratio computed from financial statements for predictive modeling</p></li>
+        </ul>
+          
+        <p>All data processing steps can also be visualized as a flowchart.</p>
+
+        <pre class="mermaid">
+          graph TD
+            subgraph PDF_Extraction ["PDF to CSV Pipeline"]
+                PDF_INPUT[/"data/raw/layoffs.pdf"\]
+                READ_PDF[Read PDF Content]
+                PARSE_PDF[Extract Table Data]
+                SAVE_RAW[Save to folder data/raw]
+                RAW_CSV[("data/raw/fyi_layoffs.csv")]
+            end
+
+            subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
+                CLEAN_START([Start Cleaning])
+                REMOVE_OVERLAP[Remove Overlapping Records]
+                MERGE_NAMES[Merge Similar Company Names]
+                STRING_SIMILARITY[Merge Closely Related Strings]
+                CLEANED_CSV[("cleaned_layoffs.csv")]
+            end
+
+            subgraph Finance_Pipeline ["get_finance_data Pipeline"]
+                SEARCH_TICKERS[Search Tickers via yfinance.Search]
+                DROP_MISSING[Drop Rows without Tickers]
+                TICKERS_CSV[("LAYOFFS_WITH_TICKERS_CSV_PATH")]
+                
+                subgraph Data_Fetch ["Parallel Data Fetching"]
+                    FETCH_CASHFLOW[Fetch Quarterly Cashflow]
+                    FETCH_FINANCIALS[Fetch Quarterly Financials]
+                end
+                
+                CASHFLOW_STORAGE[("CASHFLOW_DIR/*.csv")]
+                FINANCIAL_STORAGE[("FINANCIAL_DATA_DIR/*.csv")]
+            end
+
+            PDF_INPUT --> READ_PDF
+            READ_PDF --> PARSE_PDF
+            PARSE_PDF --> SAVE_RAW
+            SAVE_RAW --> RAW_CSV
+
+            CLEAN_START --> REMOVE_OVERLAP
+            REMOVE_OVERLAP --> MERGE_NAMES
+            MERGE_NAMES --> STRING_SIMILARITY
+            STRING_SIMILARITY --> CLEANED_CSV
+
+            CLEANED_CSV --> SEARCH_TICKERS
+            SEARCH_TICKERS --> DROP_MISSING
+            DROP_MISSING --> TICKERS_CSV
+            
+            TICKERS_CSV --> FETCH_CASHFLOW
+            TICKERS_CSV --> FETCH_FINANCIALS
+            
+            FETCH_CASHFLOW --> CASHFLOW_STORAGE
+            FETCH_FINANCIALS --> FINANCIAL_STORAGE
+            
+            subgraph Main_Project ["Project: layoff-detector (root)"]
+                START([start_point: generate_layoff])
+            end
+
+            subgraph PDF_Extraction ["PDF to CSV Pipeline"]
+                PDF_INPUT[/"data/raw/layoffs.pdf"\]
+                READ_PDF[Read PDF Content]
+                PARSE_PDF[Extract Table Data]
+                SAVE_RAW[Save to folder data/raw]
+                RAW_CSV[("data/raw/fyi_layoffs.csv")]
+            end
+
+            subgraph Data_Ingestion ["Data Ingestion"]
+                FILE_A[(File fyi_layoffs.csv)]
+                FILE_B[(File WARNDatabase2026.csv)]
+                FILE_C[(File WARNDatabaseMasterExcluding2026_.csv)]
+                
+                CONV_LIST[Convert to List]
+                SHOW_DATA[Display Data]
+                PARSE_FORMAT[Parse Format]
+            end
+
+            subgraph Preprocessing ["Data Preprocessing"]
+                DATE_TRANSFORM[Transform Date: DD.MM.Y to YY.MM.DD]
+                NORMALIZE[Normalize Data]
+                JOIN_FILES[Join into Single File]
+            end
+
+            subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
+                REMOVE_OVERLAP[Remove Overlapping Records]
+                MERGE_NAMES[Merge Similar Company Names]
+                STRING_SIMILARITY[Merge Closely Related Strings]
+            end
+
+            subgraph Output ["Final Output"]
+                FINAL_GEN[Generate Final File]
+                RESULT[(final_layoffs.csv)]
+            end
+
+            PDF_INPUT --> READ_PDF
+            READ_PDF --> PARSE_PDF
+            PARSE_PDF --> SAVE_RAW
+            SAVE_RAW --> RAW_CSV
+
+            RAW_CSV --> FILE_A
+            START --> FILE_B
+            START --> FILE_C
+
+            FILE_A --> CONV_LIST
+            FILE_B --> CONV_LIST
+            FILE_C --> CONV_LIST
+
+            CONV_LIST --> SHOW_DATA
+            SHOW_DATA --> PARSE_FORMAT
+            
+            PARSE_FORMAT --> DATE_TRANSFORM
+            DATE_TRANSFORM --> NORMALIZE
+            NORMALIZE --> JOIN_FILES
+
+            JOIN_FILES --> REMOVE_OVERLAP
+            REMOVE_OVERLAP --> MERGE_NAMES
+            MERGE_NAMES --> STRING_SIMILARITY
+            
+            STRING_SIMILARITY --> FINAL_GEN
+            FINAL_GEN --> RESULT
+        </pre>
+
+        <p>
+            Upon completion of this step, the data is transformed into the desired format and is ready for further analysis.
+        </p>
+      </div>
+ 
     </section>
-
-
-
 
     <!-- ============ 03 ANALYSIS ============ -->
     <section id="analysis">
@@ -590,16 +782,36 @@
           which prioritizes precision over recall to minimize false positives. Although this may reduce the number of detected layoffs,
           it produces prediction that are more reliable for users and can be adjusted depending on the intended applications.
         </p>
+
+        <pre class="mermaid">
+          
+            flowchart TD
+            A[Models]
+            A --> B[Random Forrest]
+            A --> C[XGBoost]
+            A --> D[Gradient Boosting]
+            A --> E[Logistic Regression]
+            A --> F[SVM]
+            A --> G[KNN]
+
+            B--> R[Merge]
+            C--> R[Merge]
+            D--> R[Merge]
+            E--> R[Merge]
+            F--> R[Merge]
+            G--> R[Merge]
+
+            R --> Results
       </div>
 
       <div class="card" id="analysis-results">
-        <span class="tag">Execution &amp; Interpretation</span>
+        <span class="tag">Execution and Interpretation</span>
         <h3>Results, with appropriate skepticism</h3>
        
         <p style="margin-top:14px;"><strong>RQ1:</strong>
            For the first research question with approximately 30,000 company-quarters across 5,381 companies, held up under scrutiny. 
            XGBoost reached a test ROC-AUC of <strong>0.975</strong> (accuracy 0.92, precision 0.91 / recall 0.89 on the layoff class),
-            and the features driving that performance &mdash; liquidity and leverage signals such as net income from continuing operations, payables &amp; accrued expenses, current liabilities, accounts receivable, and total capitalization &mdash; line up with financial intuition rather than looking like an artifact of the pipeline.</p>
+            and the features driving that performance &mdash; liquidity and leverage signals such as net income from continuing operations, payables and accrued expenses, current liabilities, accounts receivable, and total capitalization &mdash; line up with financial intuition rather than looking like an artifact of the pipeline.</p>
             <figure class="img-md">
             <img src="images/analysis/model_comparison_all.png" alt="Results All" />
             <figcaption>Model comparison on the full dataset &mdash; XGBoost achieves the highest ROC-AUC.</figcaption>
@@ -628,7 +840,7 @@
 
     <!-- ============ 04 VIZ & DISSEMINATION ============ -->
     <section id="viz">
-      <span class="eyebrow mono">05 — VISUALISATION &amp; DISSEMINATION</span>
+      <span class="eyebrow mono">05 — VISUALISATION and DISSEMINATION</span>
       <h2 class="sec-title display">Show, Don't Just Tell</h2>
       <p class="sec-intro">A picture should be worth 1000 words here — clear, labelled, and honest about what it shows. Drop your charts and screenshots into the slots below.</p>
 
@@ -657,7 +869,7 @@
           This means that the dataset was highly imbalanced, which made it difficult for the model to learn the patterns associated with layoffs. 
         </p> 
         <br>
-         <img src="images/findings/dotplotoflayofflabels.png" alt="Results All" />
+         <img src="images/findings/1in20companiesburning.png" alt="Results All" />
 
          <p> Our best performing model, Random Forest, achieved a ROC-AUC of 0.87, but the precision and recall on the layoff class were only 0.41 and 0.28. meaning that
           approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. This is not a reliable enough prediction to be useful in practice.
@@ -682,7 +894,7 @@
 
       <div class="card" id="ethics-stakeholders">
         <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span>
-        <h3>Stakeholders &amp; risk</h3>
+        <h3>Stakeholders and risk</h3>
         <p class="placeholder">Who could be affected by this project directly — and how? </p>
 
         <div class="stakeholder-row">
@@ -712,7 +924,7 @@
 
         <div class="card" id="secondary-ethics-stakeholders">
           <span class="stamp">HARM REVIEWED ✓ MITIGATIONS APPLIED</span>
-          <h3>Secondary Stakeholders &amp; risk</h3>
+          <h3>Secondary Stakeholders and risk</h3>
           <p class="placeholder">Who could be affected by this project indirectly — and how? </p>
 
           <div class="stakeholder-row">
