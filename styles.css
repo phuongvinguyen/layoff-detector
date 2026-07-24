@@ -265,8 +265,8 @@ h2.sec-title{
   display:block;
   margin:16px auto;
 }
-.card img.img-sm{ max-width:50%; }
-.card img.img-md{ max-width:75%; }
+.card img.img-sm{ max-width:50%; margin:auto;}
+.card img.img-md{ max-width:75%; margin:auto;}
 
 .card figure{
   margin:16px auto;
