@@ -157,23 +157,20 @@
         <li >Nearly one-quarter of families have less than $400 in available liquidity, and about 60 percent of families do not have a liquid savings cushion of at least 3 months of expenses
           <a href="https://www.federalreserve.gov/econres/notes/feds-notes/assessing-families-liquid-savings-using-the-survey-of-consumer-finances-20181119.html" target="_blank">[Source]</a>
         </li>
-        <li> <p> As of January 2026, about 1.835 million people in the U.S were unemployed for 27 weeks or longer. </p>
+        <li> As of January 2026, about 1.835 million people in the U.S were unemployed for 27 weeks or longer.
           <a href="https://www.onlinemswprograms.com/resources/long-term-unemployment/" target="_blank">[Source]</a>
         </li>
         <li >Unemployment is linked to higher depression, anxiety, and other mental health issues.
           <a href="https://www.cnbc.com/amp/2026/06/04/long-term-unemployment-economy-jobs.html" target="_blank">[Source]</a>
         </li>
-        <li >Researchers submitted 40.000 fictional job offers and found applicants aged 64-66 got 35% fewer callbacks then other applicants.
-          <a href ="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10735768/" target="_blank">[Source]</a>
-        </li>
-        <li >Health treatment is often tied to employment, and losing a job can mean losing access to necessary medical care. 
+        <li > Costly illnesses trigger about half of all personal bankruptcies. 
           <a href="https://pnhp.org/news/study-finds-most-pulled-into-debt-by-illness-have-jobs-health-insuranceassociated-press/" target="_blank">[Source]</a>
         </li>
         <li >Effects of job loss effects younger children strongly. Effects over lifetime. 
           <a href="https://www.brookings.edu/articles/how-having-unemployed-parents-affects-childrens-future-well-being/" target="_blank">[Source]</a>  
         </li>
-        <li >Meta analysis pooling multiple studies found unemployment is associated with an odds ratio of 1.87 for suicide mortality,... 
-          <a href="https://pubmed.ncbi.nlm.nih.gov/32859845/" target="_blank">[Source]</a>
+        <li > Losing a job often damages a person's identity, daily purpose, and social connections.
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9888435/" target="_blank">[Source]</a>
         </li>
         <br>
         <p> SRC needs to be checked for accuracy and updated if necessary.</p>
@@ -556,20 +553,44 @@
           Logistic Regression, Random Forest, Gradient Boosting, XGBoost, SVM and KNN.
           Since the relationship between financial indicators and layoffs is unlikely to be purely linear, 
           tree-based ensemble methods were included to capture more complex interactions among the features.</p>
+          
+          
         <p style="margin-top:14px;">All models are trained using the same preprocessing pipeline to ensure a fair comparison.<br>
           Missing numberical values are imputed with the median value for each feature, and binary missingness indicators are added because
           the absence of financial data itself may contain helpful information. Moreover, the features no variance are dropped,
           and stadardization is applied to ensure that all features contribute equally to the model's learning process.</p>
+          <figure class="img-md">
+            <pre class="mermaid">
+          
+            flowchart TD
+            A[Models]
+            A --> B[Random Forrest]
+            A --> C[XGBoost]
+            A --> D[Gradient Boosting]
+            A --> E[Logistic Regression]
+            A --> F[SVM]
+            A --> G[KNN]
 
+            B--> R[Merge]
+            C--> R[Merge]
+            D--> R[Merge]
+            E--> R[Merge]
+            F--> R[Merge]
+            G--> R[Merge]
+
+            R --> Results
+            </pre>
+            <figcaption>Machine learning pipeline</figcaption>
+          </figure>
           <p style="margin-top:14px;">Model performance is evaluated using stratified 5-fold cross-validation together with a held-out test set. 
             The dataset is first divided into training and test sets, with the test set kept serparate and used only for the final evaluation.
             This ensures that the reported performance metrics reflect the model's ability to generalize to previously unseen data.
             The training set is then split into five stratified folds. During cross-validation, the model is trained on four folds and 
             validated on the remaining fold, and this process is repeated five times until each fold has served as the validation set once.
             The performance metrics are averaged across the five iterations, providing a more robust estimate than a single train-validation split.
-            In the first research question <strong>RQ1</strong> the dataset is balance with approximately 40% of the observations are layoffs and
+            In the first research question <strong>RQ1</strong> the dataset is balance with approximately <strong>40%</strong> of the observations are layoffs and
             for the second research question <strong>RQ2</strong> the stratification preserves the original class layoff-to-non-layoff ratio in each fold, which is particularly important because layoffs account for
-            only about 4% of the observations.
+            only about <strong>4%</strong> of the observations.
 
           </p>
           <figure class="img-md">
@@ -593,25 +614,7 @@
           it produces prediction that are more reliable for users and can be adjusted depending on the intended applications.
         </p>
 
-        <pre class="mermaid">
-          
-            flowchart TD
-            A[Models]
-            A --> B[Random Forrest]
-            A --> C[XGBoost]
-            A --> D[Gradient Boosting]
-            A --> E[Logistic Regression]
-            A --> F[SVM]
-            A --> G[KNN]
-
-            B--> R[Merge]
-            C--> R[Merge]
-            D--> R[Merge]
-            E--> R[Merge]
-            F--> R[Merge]
-            G--> R[Merge]
-
-            R --> Results
+        
       </div>
 
       <div class="card" id="analysis-results">
@@ -621,10 +624,10 @@
         <p style="margin-top:14px;"><strong>RQ1:</strong>
            For the first research question with approximately 30,000 company-quarters across 5,381 companies, held up under scrutiny. 
            XGBoost reached a test ROC-AUC of <strong>0.975</strong> (accuracy 0.92, precision 0.91 / recall 0.89 on the layoff class),
-            and the features driving that performance &mdash; liquidity and leverage signals such as net income from continuing operations, payables and accrued expenses, current liabilities, accounts receivable, and total capitalization &mdash; line up with financial intuition rather than looking like an artifact of the pipeline.</p>
+            and the features driving that performance like liquidity and leverage signals such as net income from continuing operations, payables and accrued expenses, current liabilities, accounts receivable, and total capitalization  line up with financial intuition rather than looking like an artifact of the pipeline.</p>
             <figure class="img-md">
             <img src="images/analysis/model_comparison_all.png" alt="Results All" />
-            <figcaption>Model comparison on the full dataset &mdash; XGBoost achieves the highest ROC-AUC.</figcaption>
+            <figcaption>Model comparison on the full dataset - XGBoost achieves the highest ROC-AUC.</figcaption>
           </figure>
           <figure class="img-md">
             <img src="images/analysis/model_performance_all.png" alt="Model Performance" />
@@ -632,9 +635,9 @@
           </figure>
         <p style="margin-top:14px;"><strong>RQ2</strong> is the harder and more useful question: will a layoff be announced in the same or next quarter, the framing that would actually let someone act early. 
           Because true positives are only ~4% of rows, accuracy is a misleading headline number here (~0.95, driven almost entirely by the majority class). 
-          Our best model, Random Forest, reached a test ROC-AUC of 0.87, but precision and recall on the layoff class itself were only 0.41 and 0.28 (F1 0.33) before threshold tuning &mdash; a much weaker result than the topline ROC-AUC suggests.</p>
-        <p style="margin-top:14px;">Read plainly: financial fundamentals carry a real, learnable signal for "does this company's profile resemble one that has had layoffs" &mdash; but we can't yet reliably answer "will it happen in the next one to two quarters" from public financials alone. 
-          Many real layoff triggers &mdash; leadership decisions, M&amp;A, strategic pivots &mdash; simply aren't visible in balance-sheet numbers months in advance. 
+          Our best model, Random Forest, reached a test ROC-AUC of 0.87, but precision and recall on the layoff class itself were only 0.41 and 0.28 (F1 0.33) before threshold tuning, which is a much weaker result than the topline ROC-AUC suggests.</p>
+        <p style="margin-top:14px;">Read plainly: financial fundamentals carry a real, learnable signal for "does this company's profile resemble one that has had layoffs", but we can't yet reliably answer "will it happen in the next one to two quarters" from public financials alone. 
+          Many real layoff triggers leadership decisions, M-A, strategic pivots that simply aren't visible in balance-sheet numbers months in advance. 
           Our latest pipeline iteration tries to trade recall for precision via threshold tuning, on the view that a confident false alarm damages trust more than a missed one, but that run currently fails before producing metrics: the imputer is fed a raw ticker column and errors out trying to average a string.
           Until that's fixed, the untuned RQ2 numbers above are the ones to trust.
           Our model also shows that the most important features for predicting layoffs are related to liquidity
