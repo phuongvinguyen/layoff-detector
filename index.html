@@ -149,6 +149,8 @@
           Repaying the depts will take a long time, not even thinking about saving for his children's education or retirement.
           During this time, he thought about "ending it all" but only the thought of his family kept him going.
          </p>
+         <br>
+         <img src="images\LAYOFFS.png" alt="Alex's Story" />
       </div>
 
       <div class="card" id = "problem-statistics">
@@ -212,7 +214,7 @@
         <h3>Source and methods</h3>
 
         <ul>
-          <li><p><strong>Layoffs FYI:</strong> Crowd-sourced global layoff tracker spanning multiple industries.</p></li>
+          <li><p><strong>Layoffs FYI:</strong> Crowd-sourced global layoff tracker spanning multiple industries. </p></li>
           <li><p><strong>WARN Data:</strong> US legally-mandated filings for 2026 and historical records through 2025 (accessed via <a href="https://github.com/datasets/nasdaq-listings" target="_blank">GitHub datasets</a> and archive).</p></li>
           <li><p><strong>NASDAQ:</strong> Ticker listings for company identification.</p></li>
           <li><p><strong>Raw data:</strong> Obtained via direct CSV downloads and the yfinance library for financial data retrieval.</p></li>
@@ -325,7 +327,14 @@
         <p>The <strong>Symbol</strong> column contains the ticker symbols, while the <strong>Security Name</strong> column contains the corresponding company names.</p>
         
         <br>
-        <p>To simplify the analysis, company names were mapped to their corresponding ticker symbols. The ticker information was obtained from the NASDAQ dataset described earlier. See below the illustration, a new collumn <Tiker> was added doing the </p>
+        
+        <p>
+          To simplify the analysis, company names were mapped to their corresponding ticker symbols.
+          For the layoff dataset, ticker information was obtained using <code>yfinance</code>, while
+          for the non-layoff dataset, ticker symbols were retrieved from the NASDAQ dataset described
+          earlier. As illustrated below, a new column, <code>Ticker</code>, was added to store the
+          corresponding ticker symbol for each company.
+        </p>
 
         <img src="images/data-collection/tickers_merged_with_layoffs.png" alt="Tickers merged with layoffs" />
         
@@ -371,9 +380,9 @@
 
         <p>Records are labeled based on timing proximity to a layoff event. A layoff recorded in company X's Q2 2024 (as an example) filing will label:</p>
         <ul style="font-size: 0.9em; margin: 0.5rem 0;">
-          <li><code>layoff_this_quarter = 1</code> for the Q2 2024 row</li>
-          <li><code>layoff_next_quarter = 1</code> for the Q1 2024 row (enabling prediction of imminent events)</li>
-          <li><code>layoff = 1</code> for both rows (binary classification)</li>
+          <li><code>layoff_this_quarter = 1</code> for the Q1 2024 row</li>
+          <li><code>layoff_next_quarter = 1</code> for the Q2 2024 row (enabling prediction of imminent events)</li>
+          <li><code>layoff = layoff_this_quarter || layoff_next_quarter, where || represent OR operation.</li>
         </ul>
 
         <img src="images/data-collection/sample_layoff_quarter.png" alt="Sample quarters" />
@@ -637,6 +646,7 @@
            <figure class="img-md">
             <img src="images/analysis/top30xgboost.png" alt="Most important features" />
             <figcaption>Top 30 most important features for the XGBoost model.</figcaption>
+            <p style="margin-top:14px;">The top 30 most important features for the XGBoost model are shown in the figure above. The most important features for predicting layoffs are presence indicators, since the absence of certain information can itself provide valuable insight.</p>
           </figure>
         <br>
         <p style="margin-top:14px;"><strong>RQ2</strong> is the harder and more useful question: will a layoff be announced in the same or next quarter, the framing that would actually let someone act early. 
@@ -652,6 +662,7 @@
          <figure class="img-md">
             <img src="images/analysis/important_features.png" alt="Most important features" />
             <figcaption>Top 30 most important features for the Random Forest model.</figcaption>
+            <p style="margin-top:14px;">The top 30 most important features for the Random Forest model are shown in the figure above. The most important features for predicting layoffs are presence indicators, since the absence of certain information can itself provide valuable insight.</p>
           </figure>
          
       </div>
@@ -672,10 +683,8 @@
         <img src="images/findings/XGBoostTestSetPredictions.png" alt="Results All" />
         <p> This image is a represenative depction of the XGBoost models accuracy. Every point is a company in a given time period with their respective predictions. The X-axis represents the trained models predictions, while the Y-axis is representative of the actual outcomes from the collected data. Following the resulting 97% accuracy of the XGBoost model, the image demonstrates the majority of the model's prediction aligns with the actual outcome true positive true negative (add actual values). This means only 3% of the outcomes were false positives or false negatives.</p>
         <br>
-        <p> The top 10 features for the XGBoost model are shown below:</p>
-        <img src="images/findings/toptenfeaturesxgboost.png" alt="Results All" />
-        <p> As can be seen, most features are presence indicators, since the absence of certain information can itself provide valuable insight.  </p>
-        <!-- <p class="placeholder">Here we will explai this image</p> -->
+        
+                <!-- <p class="placeholder">Here we will explai this image</p> -->
       </div>
 
     <div class="card" id="viz-reading" style="margin-top:28px;">
@@ -690,14 +699,15 @@
         <br>
          <img src="images/findings/1in20companiesburning.png" alt="Results All" />
 
-         <p> Our best performing model, Random Forest, achieved a ROC-AUC of 0.87, but the precision and recall on the layoff class were only 0.41 and 0.28. meaning that
-          approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. This is not a reliable enough prediction to be useful in practice.
-          </p>
+        <p> The image above is a visual representation of the imbalance in the dataset. </p>
+        
 
-          <p> Our other model outputs are shown below:</p>
+          <p> Model outputs are shown below:</p>
          <img src="images/findings/RQ2modeloutputs.png" alt="Results All" />
-         <p> Despite having high ROC-AUC values, the models performed poorly on the minority class, layoffs, because of the 20:1 imbalance in the dataset. The seemingly strong performance is by predominantly predicting the majority class outcome "no layoffs" while failing to identify actual layoffs. </p>
-         <p> Therefore the results suggest that layoffs cannot be reliably predicted in a 3-6 month timeframe with the available data.</p>
+         <p> Our best performing model, Random Forest, achieved a ROC-AUC of 0.87, but the precision and recall on the layoff class were only 0.41 and 0.28. meaning that
+          approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. The reason for 
+          despite having high ROC-AUC values, the models performing poorly on the minority class, layoffs, is due to the 20:1 imbalance in the dataset. The seemingly strong performance is by predominantly predicting the majority class outcome "no layoffs" while failing to identify actual layoffs.
+        </p>
 
 
         <!-- <p class="placeholder">Here we will explain this image</p> -->
@@ -708,17 +718,28 @@
           <!-- ============ 05 ETHICS ============ -->
     <section id="ethics">
       <span class="eyebrow mono">03 — ETHICS</span>
-      <h2 class="sec-title display">Limitations, Stakeholder Risk, & Mitigations</h2>
-      <p class="sec-intro">Consideration of affects on stakeholders, including potential risks, mitigations, and limitations. (add high level summary here for each subsection)</p>
+      <h2 class="sec-title display">Disclaimers, Limitations, Risks, & Mitigations</h2>
+      <p class="sec-intro">Consideration of project limitations, their risk on stakeholders, and mitigations. (add high level summary here for each subsection)</p>
 
+     <div class="card" id="ethics-disclaimer">
+          <span class="tag">Disclaimer</span>
+          <h3>Please consider before utilizing this tool</h3>
+          <!-- <p class="placeholder"> limitations do we have? </p> -->
+
+          <p > The model shouldn’t be used solely to make personal, business or investment decision. Our aim is to provide a tool that can help identify potential layoff risks, but it is not a definitive predictor of layoffs.
+            The model is not a substitute for professional advice, and it should not be relied upon as the sole basis for making decisions. 
+            The model is based on historical data and may not accurately predict future events. Referring to findings for RQ2, we cannot accuratly predict the layoff timeline! 
+            The model will not recieve regular updates or maintenance, thus it may degrade over time.   
+          </p>
+      </div> 
+      
       <div class="card" id="ethics-limitations">
           <span class="tag">Limitations</span>
           <h3>Scope of the Project</h3>
-          <p class="placeholder">What concrete limitations do we have? </p>
+          <!-- <p class="placeholder"> limitations do we have? </p> -->
 
-          <p > We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
-            employee-level data, sensitive information, or personally identifiable
-            information.
+          <p > We exclusively used publicly available company level financial data from yfinance, WARN and layoffs.fyi to train our models. We did not collect or use any
+            employee-level data, sensitive information, or personally identifiable information.
             Low probability, but could happen. Companies with the same name can be resulting in the same ticker. A ticker is defined as the financial info from yFinance, this is explained in detail in the data wrangling section (link to the section)
             May happen; likely... Might lose companies when uppercasing naming. Capitili 
             Larger limitation; trusted data from WARN and fyi and NASDAQ. We believe info from yfinance is correct as well however  
@@ -761,7 +782,7 @@
           </div>
 
         </div>
-        <!-- </div> --> 
+     <!--- </div> -->
         
 
        <!--- <div class="card" id="secondary-ethics-stakeholders">
@@ -805,22 +826,25 @@
             <div class =stakeholder-column>
               <span class="chip">Competitors</span>
               <p > may exploit a "risk" prediction for recruiting or competitive positioning even if it doesn't play out.</p>
+              </div>
+
           </div>
-  
+          </div>
+        <div class="card" id="ethics-mitigations">
+          <span class="tag">Mitigations</span>
+          <h3>How we limited harm</h3>
+          <p class="placeholder">What concrete steps limited harm </p>
 
-      <div class="card" id="ethics-mitigations">
-        <span class="tag">Mitigations</span>
-        <h3>How we limited harm</h3>
-        <p class="placeholder">What concrete steps limited harm </p>
+          <p > We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
+              employee-level data, sensitive information, or personally identifiable
+              information.
+        </p>
 
-        <p > We exclusively used publicly available company level financial data from yfinance,WARN and layoffs.fyi to train our models. We did not collect or use any
-            employee-level data, sensitive information, or personally identifiable
-            information.
-       </p>
+        <p> All results are presented as model estimations and not confirmed future events. The Limitations of the models and the dataset are discussed in the findings and analysis sections.</p>
+        <br>
+        <p> The intended use of the model is to support decision-making and should not be used to make decisions about financial matters on their own.</p>
 
-       <p> All results are presented as model estimations and not confirmed future events. The Limitations of the models and the dataset are discussed in the findings and analysis sections.</p>
-       <br>
-       <p> The intended use of the model is to support decision-making and should not be used to make decisions about financial matters on their own.</p>
+        </div>
 
       </div>
 
