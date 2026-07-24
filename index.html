@@ -589,6 +589,26 @@
           which prioritizes precision over recall to minimize false positives. Although this may reduce the number of detected layoffs,
           it produces prediction that are more reliable for users and can be adjusted depending on the intended applications.
         </p>
+
+        <pre class="mermaid">
+          
+            flowchart TD
+            A[Models]
+            A --> B[Random Forrest]
+            A --> C[XGBoost]
+            A --> D[Gradient Boosting]
+            A --> E[Logistic Regression]
+            A --> F[SVM]
+            A --> G[KNN]
+
+            B--> R[Merge]
+            C--> R[Merge]
+            D--> R[Merge]
+            E--> R[Merge]
+            F--> R[Merge]
+            G--> R[Merge]
+
+            R --> Results
       </div>
 
       <div class="card" id="analysis-results">
