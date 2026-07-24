@@ -94,7 +94,7 @@
       <h1 class="title display">Layoff Detector</h1>
       <p class="subtitle-edit">Is your job burning? We can smell it from a mile away. Let us introduce our tool that may warn you before layoffs happen.</p>
       <div class="meta-strip mono">
-        <div>INVESTIGATORS<span> Bora Cömert <br> Alfredo Martins <br> Vi Nguyen <br> Selin Fidan <br> Tim Stöcker </span></div>
+        <div>INVESTIGATORS<span> Alfredo Martins <br> Bora Cömert <br> Selin Fidan <br> Tim Stöcker <br> Vi Nguyen </span></div>
         <div>OPENED<span> SoSe 2026</span></div>
         <div>FILED UNDER<span> Computational Methods for Open Source Intelligence </span></div>
       </div>
@@ -203,11 +203,12 @@
     <section id="data">
       <span class="eyebrow mono">02 — DATA COLLECTION and WRANGLING</span>
       <h2 class="sec-title display">Where It Came From</h2>
-      
-      <p class="sec-intro">We integrated data from three primary sources, Layoffs FYI, NASDAQ, and WARN (Worker Adjustment and Retraining Notification) filings, through a multi stage processing pipeline. The pipeline standardized data formats, resolved overlapping and duplicate records, and harmonized company identifiers to create a unified dataset for downstream analysis.</p>
 
       <div class="card" id="data-collection">
         <span class="tag">Collection</span>
+        
+        <p>We integrated data from three primary sources, Layoffs FYI, NASDAQ, and WARN (Worker Adjustment and Retraining Notification) filings, through a multi stage processing pipeline. The pipeline standardized data formats, resolved overlapping and duplicate records, and harmonized company identifiers to create a unified dataset for downstream analysis.</p>
+        
         <h3>Source and methods</h3>
 
         <ul>
@@ -289,7 +290,7 @@
         </pre>
 
         <h3>Cleaning date</h3>
-        <p>Raw data arrived in three different date formats (DD.MM.YYYY, DD/MM/YYYY, MM/DD/YYYY) with inconsistent company naming conventions. We normalized all dates to ISO 8601 (YYYY-MM-DD), uppercased company names for matching, removed duplicate records (retaining WARN data as authoritative), deduplicated via string similarity matching, dropped companies without valid tickers, and merged financial features from quarterly cashflow and income statement data. Each layoff event was labeled 0 or 1 for prediction tasks.</p>
+        <p>Raw data arrived in three different date formats (DD.MM.YYYY, DD/MM/YYYY, MM/DD/YYYY) with inconsistent company naming conventions. We normalized all dates to ISO 8601 (YYYY-MM-DD), uppercased company names for matching, removed duplicate records (retaining WARN data as authoritative), deduplicated via string similarity matching, dropped companies without valid tickers, and merged financial features from quarterly cashflow and financial statement data. Each layoff event was labeled 0 or 1 for prediction tasks.</p>
         
         <br>
         <h3>Date Normalization</h3>
@@ -422,9 +423,8 @@
             end
 
             subgraph Data_Cleaning ["Data Cleaning & Deduplication"]
-                CLEAN_START([Start cleaning])
                 REMOVE_OVERLAP[Remove overlapping records]
-                MERGE_NAMES[Merge Similar company names]
+                MERGE_NAMES[Merge similar company names]
                 STRING_SIMILARITY[Merge closely related strings]
                 CLEANED_CSV[("cleaned_layoffs.csv")]
             end
@@ -448,7 +448,6 @@
             PARSE_PDF --> SAVE_RAW
             SAVE_RAW --> RAW_CSV
 
-            CLEAN_START --> REMOVE_OVERLAP
             REMOVE_OVERLAP --> MERGE_NAMES
             MERGE_NAMES --> STRING_SIMILARITY
             STRING_SIMILARITY --> CLEANED_CSV
@@ -465,7 +464,7 @@
             
             subgraph PDF_Extraction ["PDF to CSV pipeline"]
                 PDF_INPUT[/"data/raw/layoffs.pdf"\]
-                READ_PDF[Read PDF Content]
+                READ_PDF[Read PDF content]
                 PARSE_PDF[Extract table data]
                 SAVE_RAW[Save to folder data/raw]
                 RAW_CSV[("data/raw/fyi_layoffs.csv")]
@@ -490,7 +489,7 @@
 
             subgraph Data_Cleaning ["Data cleaning and deduplication"]
                 REMOVE_OVERLAP[Remove overlapping records]
-                MERGE_NAMES[Merge Similar company names]
+                MERGE_NAMES[Merge similar company names]
                 STRING_SIMILARITY[Merge closely related strings]
             end
 
