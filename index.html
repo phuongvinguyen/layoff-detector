@@ -551,20 +551,13 @@
         <h3>Our approach</h3>
         <p>To address our reasearch questions, we formulate layoff prediction as supervised binary classification (layoff or non-layoff) using quarterly company financial data,
           including balance sheet, financial data and cashflow.
-          After processing, the dataset contains approximately 30,000 company-quarters across 5,381 companies.
-          The dataset for the first research question (RQ1) is balanced, with approximately 12,047 positive layoff rows and 17,971 negative non-layoff rows. 
-          However, the dataset for the second research question (RQ2) is more imbalanced, with approximately 1,205 positive layoff rows and 28,813 negative non-layoff rows.
+          After processing, the dataset contains approximately <strong>30,000</strong> company-quarters across <strong>5,381</strong> companies.
+          The dataset for the first research question (RQ1) is balanced, with approximately <strong>12,047 positive layoff rows</strong> and <strong>12,047 negative non-layoff rows</strong>. 
+          However, the dataset for the second research question (RQ2) is more imbalanced, with approximately <strong>1,205 positive layoff rows</strong> and <strong>28,813 negative non-layoff rows</strong>.
           Each row in our dataset represents a single company in a single quarter, with features derived from the company's financial statements and the target variable indicating whether a layoff occurred in that quarter or the next.</p>
-          <br>
-          <!-- We test two framings that map directly onto our research questions: <br>
-          <ul>
-            <li><strong>RQ1:</strong> has this company ever had a layoff, given its financial profile?</li>
-            <li> <strong>RQ2:</strong> will a layoff be announced in the same or next quarter?</li>
-          </ul> -->
-          <!-- For both questions, we use the same pipeline and evaluation framework,
-          but the second framing is more challenging because it requires predicting a future event rather than a historical one. -->
+        
         <p style="margin-top:14px;">We compared six supervised learning algorithms representing both linear and non-linear families: 
-          Logistic Regression, Random Forest, Gradient Boosting, XGBoost, SVM, KNN, and a Decision Tree.
+          Logistic Regression, Random Forest, Gradient Boosting, XGBoost, SVM and KNN.
           Since the relationship between financial indicators and layoffs is unlikely to be purely linear, 
           tree-based ensemble methods were included to capture more complex interactions among the features.</p>
         <p style="margin-top:14px;">All models are trained using the same preprocessing pipeline to ensure a fair comparison.<br>
@@ -578,11 +571,19 @@
             The training set is then split into five stratified folds. During cross-validation, the model is trained on four folds and 
             validated on the remaining fold, and this process is repeated five times until each fold has served as the validation set once.
             The performance metrics are averaged across the five iterations, providing a more robust estimate than a single train-validation split.
-            Stratification preserves the original class layoff-to-non-layoff ratio in each fold, which is particularly important because layoffs account for
+            In the first research question <strong>RQ1</strong> the dataset is balance with approximately 40% of the observations are layoffs and
+            for the second research question <strong>RQ2</strong> the stratification preserves the original class layoff-to-non-layoff ratio in each fold, which is particularly important because layoffs account for
             only about 4% of the observations.
 
           </p>
-
+          <figure class="img-md">
+            <img src="images/analysis/train_test_all.png" alt="Train and test set all" />
+            <figcaption>Relation of train and test set in RQ1</figcaption>
+          </figure>
+          <figure class="img-md">
+            <img src="images/analysis/train_test_current_or_next.png" alt="Train and test set all" />
+            <figcaption>Relation of train and test set in RQ2</figcaption>
+          </figure>
          <p style="margin-top:14px;">
           Given this class imbalance, model performance is accessed using both the ROC-AUC and Precision-Recall AUC metrics.
           While ROC-AUC provides an overall measure of the model's ability to discriminate between the classes, 
@@ -595,6 +596,26 @@
           which prioritizes precision over recall to minimize false positives. Although this may reduce the number of detected layoffs,
           it produces prediction that are more reliable for users and can be adjusted depending on the intended applications.
         </p>
+
+        <pre class="mermaid">
+          
+            flowchart TD
+            A[Models]
+            A --> B[Random Forrest]
+            A --> C[XGBoost]
+            A --> D[Gradient Boosting]
+            A --> E[Logistic Regression]
+            A --> F[SVM]
+            A --> G[KNN]
+
+            B--> R[Merge]
+            C--> R[Merge]
+            D--> R[Merge]
+            E--> R[Merge]
+            F--> R[Merge]
+            G--> R[Merge]
+
+            R --> Results
       </div>
 
       <div class="card" id="analysis-results">
@@ -636,19 +657,6 @@
       <span class="eyebrow mono">05 — VISUALISATION and DISSEMINATION</span>
       <h2 class="sec-title display">Show, Don't Just Tell</h2>
       <p class="sec-intro">A picture should be worth 1000 words here — clear, labelled, and honest about what it shows. Drop your charts and screenshots into the slots below.</p>
-
-     <!--  <div class="viz-grid" id="viz-figures">
-        <div class="viz-slot">[FIGURE 1 — replace with your visualization. Label axes, add a caption.]</div>
-        <div class="viz-slot">[FIGURE 2 — replace with your visualization. Label axes, add a caption.]</div>
-        <div class="viz-slot wide">[FIGURE 3 — a wider view: map, timeline, or network diagram]</div>
-      </div>
-
-     <div class="card" id="viz-reading" style="margin-top:28px;">
-        <span class="tag">Reading the picture</span>
-        <p class="placeholder">[One or two sentences per figure explaining what the reader should notice and why it matters — don't just caption, interpret.]</p>
-      </div>
-    </section>
-    -->
 
     <div class="card" id="viz-reading" style="margin-top:28px;">
         <span class="tag">Findings; In-depth review </span>
