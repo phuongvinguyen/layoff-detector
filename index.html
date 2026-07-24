@@ -701,13 +701,13 @@
 
         <p> The image above is a visual representation of the imbalance in the dataset. </p>
         
-          <p> Our other model outputs are shown below:</p>
+
+          <p> Model outputs are shown below:</p>
          <img src="images/findings/RQ2modeloutputs.png" alt="Results All" />
          <p> Our best performing model, Random Forest, achieved a ROC-AUC of 0.87, but the precision and recall on the layoff class were only 0.41 and 0.28. meaning that
-          approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. This is not a reliable enough prediction to be useful in practice.
-          </p>
-         <p> Despite having high ROC-AUC values, the models performed poorly on the minority class, layoffs, because of the 20:1 imbalance in the dataset. The seemingly strong performance is by predominantly predicting the majority class outcome "no layoffs" while failing to identify actual layoffs. </p>
-         <p> Therefore the results suggest that layoffs cannot be reliably predicted in a 3-6 month timeframe with the available data.</p>
+          approximately four out of every ten predicted layoffs were correct and it identified fewer than 3 out of every ten actual layoffs. The reason for 
+          despite having high ROC-AUC values, the models performing poorly on the minority class, layoffs, is due to the 20:1 imbalance in the dataset. The seemingly strong performance is by predominantly predicting the majority class outcome "no layoffs" while failing to identify actual layoffs.
+        </p>
 
 
         <!-- <p class="placeholder">Here we will explain this image</p> -->
